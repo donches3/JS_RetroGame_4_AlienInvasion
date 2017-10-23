@@ -28,6 +28,7 @@ function imageLoadingDoneSoStartGame() {
     setupInput();
 
     loadFormation(formationOne); // change back to formation One ------------- NOTE ////////////////
+    loadBunkers();
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 
@@ -55,6 +56,7 @@ function moveAll() {
 
 function drawAll() {
     drawWorld();
+    drawBunkers();
     drawFormation();
     drawSliders();
     drawBullets();
