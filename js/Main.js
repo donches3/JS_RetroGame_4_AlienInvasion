@@ -27,17 +27,10 @@ function imageLoadingDoneSoStartGame() {
 
     setupInput();
 
-    loadFormation(formationOne); // change back to formation One ------------- NOTE ////////////////
-    loadBunkers();
+    loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
+    loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
-
-function loadFormation(whichFormation) {
-    alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
-    UpdateFormationBounds();
-    alienCounter = countAliens();
-    formationHoldCounter = Math.floor(alienCounter/2);
-} // =========================================================================== end function loadLevel
 
 function updateAll() {
     if (!gameOver){

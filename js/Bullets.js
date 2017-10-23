@@ -85,58 +85,58 @@ function moveBullets(){
 
 } // =========================================================================== end function moveBullets
 
-function collideBulletsWithTopOfWorld(){
+function collideBulletsWithTopOfWorld(whichBullets){
 
     // ===== check top-of-world collision (player bullets only) =====
 
     // this loop must start at the end and increment backwards
     // because the length of the array is changing while this loop is running
-    for (var i = playerBullets.length - 1; i >= 0; i--){ // does not run if array is empty
-        if (playerBullets[i].positionY <= TOP_OF_WORLD){
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+        if (whichBullets[i].positionY <= TOP_OF_WORLD){
 
-            destroyBullet(playerBullets, i);
+            destroyBullet(whichBullets, i);
 
         }
     }
 
 } // =========================================================================== end function collideBulletsWithTopOfWorld
 
-function collideBulletsWithGround(){
+function collideBulletsWithGround(whichBullets){
 
     // ===== check ground collision (enemy bullets only) =====
 
     // this loop must start at the end and increment backwards
     // because the length of the array is changing while this loop is running
-    for (var i = enemyBullets.length - 1; i >= 0; i--){ // does not run if array is empty
-        if (enemyBullets[i].positionY >= canvas.height - GROUND_LEVEL){
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+        if (whichBullets[i].positionY >= canvas.height - GROUND_LEVEL){
 
-            destroyBullet(enemyBullets, i);
+            destroyBullet(whichBullets, i);
 
         }
     }
 
 } // =========================================================================== end function collideBulletsWithGround
 
-function collideBulletsWithSliders(){
+function collideBulletsWithSliders(whichBullets){
 
     // ===== check collision with alien sliders (player bullets only) =====
 
     // Both outer and inner loops must start at the end and increment backwards
     // because the lengths of both arrays are changing while these loops are running
-    for (var i = playerBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
 
-        if (playerBullets[i].positionY < SLIDERS_BOTTOM &&
-            playerBullets[i].positionY > SLIDERS_TOP){ // if in slider domain (Y alignment)
+        if (whichBullets[i].positionY < SLIDERS_BOTTOM &&
+            whichBullets[i].positionY > SLIDERS_TOP){ // if in slider domain (Y alignment)
 
             for (var j = sliders.length - 1; j >= 0; j--){ // does not run if array is empty
 
                 var thisSliderBounds = getSliderBounds(j)
 
-                if (playerBullets[i].positionX > thisSliderBounds.left &&
-                    playerBullets[i].positionX < thisSliderBounds.right){ // if in slider bounds (X alignment)
+                if (whichBullets[i].positionX > thisSliderBounds.left &&
+                    whichBullets[i].positionX < thisSliderBounds.right){ // if in slider bounds (X alignment)
 
                     hitSlider(j);
-                    destroyBullet(playerBullets, i);
+                    destroyBullet(whichBullets, i);
                     j = -1; // breaks the j loop
 
                 } // end if slider bounds
@@ -184,38 +184,83 @@ function collideBulletsWithBullets(){
 
 } // =========================================================================== end function collideBulletsWithBullets
 
-function collideBulletsWithBunkers(){
+function collideBulletsWithBunkers(whichBullets){
 
     // ===== check collision with bunkers (all bullets) =====
 
+    // Both outer and inner loops must start at the end and increment backwards
+    // because the lengths of both arrays are changing while these loops are running
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+
+        if (whichBullets[i].positionY < BUNKERS_BOTTOM &&
+            whichBullets[i].positionY > BUNKERS_TOP){ // if in bunker domain (Y alignment)
+
+            for (var j = bunkersAll.length - 1; j >= 0; j--){ // loop through bunkers
+
+                var thisBunkerBounds = bunkersAllBounds[j];
+
+                if (whichBullets[i].positionX > thisBunkerBounds.left &&
+                    whichBullets[i].positionX < thisBunkerBounds.right){ // if in this bunker (X alignment)
+
+                    // get index of block (normal test)
+                    var blockIndex = getBlockIndexHere(j, whichBullets[i].positionX, whichBullets[i].positionY);
+
+                    // to prevent tunnelling, finds a position halfway between current and previous position
+                    var bulletBackX = whichBullets[i].positionX - Math.floor(whichBullets[i].velocityX/2);
+                    var bulletBackY = whichBullets[i].positionY - Math.floor(whichBullets[i].velocityY/2);
+                    var blockIndexBack = getBlockIndexHere(j, bulletBackX, bulletBackY);
+
+                    // if this block is a block (HIT)
+                    if (bunkersAll[j][blockIndexBack] == BUNKER_BLOCK){ // to prevent tunnelling
+                        // destroy this block by replacing it with damaged block
+                        bunkersAll[j][blockIndexBack] = BUNKER_DAMAGE;
+                        // destroy this bullet
+                        destroyBullet(whichBullets, i);
+                        j = -1; // breaks the j loop
+                    }else if (bunkersAll[j][blockIndex] == BUNKER_BLOCK){ // normal test
+                        // destroy this block by replacing it with damaged block
+                        bunkersAll[j][blockIndex] = BUNKER_DAMAGE;
+                        // destroy this bullet
+                        destroyBullet(whichBullets, i);
+                        j = -1; // breaks the j loop
+                    } // end if block
+
+                } // end if bunker bounds
+
+            } // end for j (bunker index)
+
+        } // end if bunker domain
+
+    } // end for i (bullet index)
+
 } // =========================================================================== end function collideBulletsWithBunkers
 
-function collideBulletsWithPlayer(){
+function collideBulletsWithPlayer(whichBullets){
 
     // ===== check collision with Player (enemy bullets only) =====
 
 } // =========================================================================== end function collideBulletsWithPlayer
 
-function collideBulletsWithFormation(){
+function collideBulletsWithFormation(whichBullets){
 
     // ===== check collision with alien formation (player bullets only) =====
 
     // this loop must start at the end and increment backwards
     // because the length of the array is changing while this loop is running
-    for (var i = playerBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
         var cellIndex;
         var cellKindHere;
 
         var alienBounds = {top:0, bottom:0, left:0, right:0};
 
         // check this bullet against formation bounds
-        if (playerBullets[i].positionY <= formationBottom &&
-            playerBullets[i].positionY >= formationTop &&
-            playerBullets[i].positionX <= formationRight &&
-            playerBullets[i].positionX >= formationLeft){
+        if (whichBullets[i].positionY <= formationBottom &&
+            whichBullets[i].positionY >= formationTop &&
+            whichBullets[i].positionX <= formationRight &&
+            whichBullets[i].positionX >= formationLeft){
 
             // find which cell (index) bullet is in
-            cellIndex = getFormationIndexHere(playerBullets[i].positionX, playerBullets[i].positionY);
+            cellIndex = getFormationIndexHere(whichBullets[i].positionX, whichBullets[i].positionY);
 
             // what is in this cell
             cellKindHere = alienGrid[cellIndex];
@@ -234,10 +279,10 @@ function collideBulletsWithFormation(){
                             'red'); // ----------------------------------------------------------------------- ////////////////
 
                 // check this bullet against occupant's bounds for a hit
-                if (playerBullets[i].positionY <= alienBounds.bottom &&
-                    playerBullets[i].positionY >= alienBounds.top &&
-                    playerBullets[i].positionX <= alienBounds.right &&
-                    playerBullets[i].positionX >= alienBounds.left){
+                if (whichBullets[i].positionY <= alienBounds.bottom &&
+                    whichBullets[i].positionY >= alienBounds.top &&
+                    whichBullets[i].positionX <= alienBounds.right &&
+                    whichBullets[i].positionX >= alienBounds.left){
 
                     // award score
                     gameScore += (cellKindHere * 100);
@@ -248,7 +293,7 @@ function collideBulletsWithFormation(){
                     // pause formation motion briefly
                     // formationHoldCounter = Math.floor((ALIEN_GRID_COLS * ALIEN_GRID_ROWS)/6); // this doesn't quite work right
                     // destroy this bullet
-                    destroyBullet(playerBullets, i);
+                    destroyBullet(whichBullets, i);
 
                 } // end if hit
 
@@ -260,17 +305,18 @@ function collideBulletsWithFormation(){
 
 function collideBullets(){
 
-    collideBulletsWithTopOfWorld();
+    collideBulletsWithTopOfWorld(playerBullets);
 
-    collideBulletsWithGround();
+    collideBulletsWithGround(enemyBullets);
 
-    collideBulletsWithSliders();
+    collideBulletsWithSliders(playerBullets);
 
-    collideBulletsWithBunkers();
+    collideBulletsWithBunkers(playerBullets);
+    collideBulletsWithBunkers(enemyBullets);
 
-    collideBulletsWithFormation();
+    collideBulletsWithFormation(playerBullets);
 
-    collideBulletsWithPlayer();
+    collideBulletsWithPlayer(enemyBullets);
 
     collideBulletsWithBullets();
 
@@ -287,13 +333,13 @@ function fireAllBullets(){
     fireHold++;                                                                 ////////////////
     enemyFireCoolDownCounter--;                                                 ////////////////
                                                                                 ////////////////
-    spread = Math.floor(Math.random() * 100);                                   ////////////////
+    spread = Math.floor(Math.random() * 700);                                   ////////////////
     // ------------------------ end temporary fire control code ----------------////////////////
 
     // fire player bullet
     if (fireButtonPressed && playerBullets.length < MAX_PLAYER_BULLETS){
         // fireBullet(playerBullets, playerBulletStartX, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// restore this line ////////////////
-        fireBullet(playerBullets, 400 + spread, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// delete this line ////////////////
+        fireBullet(playerBullets, 100 + spread, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// delete this line ////////////////
         fireButtonPressed = false; // temporary -------------------------------------------------------------------------------////////////////
     }
 

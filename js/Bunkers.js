@@ -24,25 +24,27 @@ const BUNKER_DAMAGE = 2;
 // bunkersAll is an array of bunkers.  Each bunker is an array of blocks.
 // so bunkersAll is an array of arrays, or a two dimensional array.
 var bunkersAll = [];
-var BunkersAllBounds = [];
+var bunkersAllBounds = [];
 
 const BUNKER_QUANTITY = 4;
 const BUNKER_LAYOUT_WIDTH = 640;
 const BUNKER_GAP_WIDTH = Math.floor((BUNKER_LAYOUT_WIDTH - (BUNKER_WIDTH * BUNKER_QUANTITY)) / (BUNKER_QUANTITY - 1));
 // for some reason, canvas.width is undifined here
 // const BUNKERS_ORIGIN_X = Math.floor((canvas.width - BUNKER_LAYOUT_WIDTH)/2);
-const BUNKERS_ORIGIN_X = Math.floor((900 - BUNKER_LAYOUT_WIDTH)/2);
-const BUNKERS_ORIGIN_Y = 600;
+var canvasWidth = 900;
+const BUNKERS_ORIGIN_X = Math.floor((canvasWidth - BUNKER_LAYOUT_WIDTH)/2);
+const BUNKERS_ORIGIN_Y = 500;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
 const BUNKERS_BOTTOM = BUNKERS_TOP + BUNKER_HEIGHT;
 
 // ============================================================================= end vars
 
 
-function loadBunkers(){
-    var bunkerFresh = bunkerTest1.slice(); // copies all values in bunkerTest1 into bunkerFresh
+function loadBunkers(whichBunker){
 
     for (var i = 0; i < BUNKER_QUANTITY; i++){
+        var bunkerFresh = whichBunker.slice(); // copies all values in bunkerTest1 into bunkerFresh
+
         bunkersAll.push(bunkerFresh); // adds bunkerFresh array to end of array
         createThisBunkerBounds();
     }
@@ -52,12 +54,12 @@ function loadBunkers(){
 function createThisBunkerBounds(){
     var bunkerBoundsObject = {top:0, bottom:0, left:0, right:0};
 
-    BunkersAllBounds.push(bunkerBoundsObject); // adds bunkerBoundsObject array to end of array
-    var i = BunkersAllBounds.length - 1;
-    BunkersAllBounds[i].top = BUNKERS_TOP;
-    BunkersAllBounds[i].bottom = BUNKERS_BOTTOM;
-    BunkersAllBounds[i].left = BUNKERS_ORIGIN_X + (i * (BUNKER_WIDTH + BUNKER_GAP_WIDTH));
-    BunkersAllBounds[i].right = BunkersAllBounds[i].left + BUNKER_WIDTH;
+    bunkersAllBounds.push(bunkerBoundsObject); // adds bunkerBoundsObject array to end of array
+    var i = bunkersAllBounds.length - 1;
+    bunkersAllBounds[i].top = BUNKERS_TOP;
+    bunkersAllBounds[i].bottom = BUNKERS_BOTTOM;
+    bunkersAllBounds[i].left = BUNKERS_ORIGIN_X + (i * (BUNKER_WIDTH + BUNKER_GAP_WIDTH));
+    bunkersAllBounds[i].right = bunkersAllBounds[i].left + BUNKER_WIDTH;
 
 } // =========================================================================== end function createThisBunkerBounds
 
@@ -71,12 +73,12 @@ function drawBunkers(){
 } // =========================================================================== end function drawBunkers
 
 function drawBunkerImage(bunkerID){
-    drawBitmap(bunkerPic, BunkersAllBounds[bunkerID].left, BunkersAllBounds[bunkerID].top);
+    drawBitmap(bunkerPic, bunkersAllBounds[bunkerID].left, bunkersAllBounds[bunkerID].top);
 } // =========================================================================== end function drawBunkerImage
 
 function drawBunkerDamage(bunkerID){
-    var bunkerOriginX = BunkersAllBounds[bunkerID].left;
-    var bunkerOriginY = BunkersAllBounds[bunkerID].top;
+    var bunkerOriginX = bunkersAllBounds[bunkerID].left;
+    var bunkerOriginY = bunkersAllBounds[bunkerID].top;
     var centerOffsetX = Math.floor(BUNKER_BLOCK_WIDTH/2);
     var centerOffsetY = Math.floor(BUNKER_BLOCK_HEIGHT/2);
     var drawX;
@@ -96,3 +98,38 @@ function drawBunkerDamage(bunkerID){
     }
 
 } // =========================================================================== end function drawBunkerDamage
+
+function getBlockIndexHere(bunkerID, x, y){
+    var blockindex;
+    var bunkerOriginX = bunkersAllBounds[bunkerID].left;
+    var bunkerOriginY = bunkersAllBounds[bunkerID].top;
+    var row;
+    var col;
+
+
+    // find column
+    col = Math.floor((x - bunkerOriginX)/BUNKER_BLOCK_WIDTH);
+
+    if(col >= BUNKER_COLS){ // correct edge error
+        col--;
+    }
+    if(col < 0){
+        col++;
+    }
+
+    // find row
+    row = Math.floor((y - bunkerOriginY)/BUNKER_BLOCK_HEIGHT);
+
+    if(row >= BUNKER_ROWS){ // correct edge error
+        row--;
+    }
+    if(row < 0){
+        row++;
+    }
+
+    // get index
+    blockindex = rowColToArrayIndex(col, row, BUNKER_COLS);
+
+    return blockindex;
+
+} // =========================================================================== end function getBlockIndexHere

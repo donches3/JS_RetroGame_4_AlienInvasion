@@ -70,6 +70,13 @@ var isMovingRight = true;
 
 // ============================================================================= end vars
 
+function loadFormation(whichFormation) {
+    alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
+    UpdateFormationBounds();
+    alienCounter = countAliens();
+    formationHoldCounter = Math.floor(alienCounter/2);
+} // =========================================================================== end function loadFormation
+
 function drawFormation() {
 
     var arrayIndex = 0;
