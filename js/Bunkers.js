@@ -65,7 +65,7 @@ function drawBunkers(){
 
     for (var i = 0; i < BUNKER_QUANTITY; i++){
         drawBunkerImage(i);
-        // drawBunkerDamage(i);
+        drawBunkerDamage(i);
     }
 
 } // =========================================================================== end function drawBunkers
@@ -75,5 +75,24 @@ function drawBunkerImage(bunkerID){
 } // =========================================================================== end function drawBunkerImage
 
 function drawBunkerDamage(bunkerID){
+    var bunkerOriginX = BunkersAllBounds[bunkerID].left;
+    var bunkerOriginY = BunkersAllBounds[bunkerID].top;
+    var centerOffsetX = Math.floor(BUNKER_BLOCK_WIDTH/2);
+    var centerOffsetY = Math.floor(BUNKER_BLOCK_HEIGHT/2);
+    var drawX;
+    var drawY;
+    var row;
+    var col;
+
+    for (var blockIndex = 0; blockIndex < BUNKER_ROWS * BUNKER_COLS; blockIndex++){
+        if (bunkersAll[bunkerID][blockIndex] == BUNKER_DAMAGE){ // if damaged block
+            var rowCol = arrayIndexToRowCol(blockIndex, BUNKER_COLS);
+            row = rowCol.row;
+            col = rowCol.col;
+            drawX = bunkerOriginX + (BUNKER_BLOCK_WIDTH  * col) + centerOffsetX;
+            drawY = bunkerOriginY + (BUNKER_BLOCK_HEIGHT * row) + centerOffsetY;
+            colorCircle(drawX, drawY, BUNKER_DAMAGE_RADIUS, 'black');
+        }
+    }
 
 } // =========================================================================== end function drawBunkerDamage

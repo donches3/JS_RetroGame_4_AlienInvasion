@@ -49,6 +49,15 @@ function rowColToArrayIndex(col, row, numCols) {
     return (row * numCols) + col;
 } // =========================================================================== end function rowColToArrayIndex
 
+function arrayIndexToRowCol(index, numCols){
+    var rowCol = {row:0, col:0};
+
+    rowCol.row = Math.floor(index/numCols);
+    rowCol.col = index - (rowCol.row * numCols);
+
+    return rowCol;
+} // =========================================================================== end function arrayIndexToRowCol
+
 function destroyElementOfArray(whichArray, index){
     // destroy this element without leaving gap in array
     whichArray.splice(index, 1);
