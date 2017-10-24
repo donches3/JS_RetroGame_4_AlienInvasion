@@ -62,3 +62,80 @@ function destroyElementOfArray(whichArray, index){
     // destroy this element without leaving gap in array
     whichArray.splice(index, 1);
 } // =========================================================================== end function destroyElementOfArray
+
+function doTheseRectanglesOverlap(rect1Bounds, rect2Bounds){
+
+    // first, check that recangles aren't invalid
+    if (rect1Bounds.right  < rect1Bounds.left ||
+        rect1Bounds.bottom < rect1Bounds.top  ||
+        rect2Bounds.right  < rect2Bounds.left ||
+        rect2Bounds.bottom < rect2Bounds.top  ){
+
+        console.log('invalid rectangle in doTheseRectanglesOverlap');
+        return false;
+    }
+
+    // check non-point (plus-shaped) overlap where rect1 is "vertical"
+    if (rect1Bounds.left   > rect2Bounds.left   &&
+        rect1Bounds.right  < rect2Bounds.right  &&
+        rect1Bounds.top    < rect2Bounds.top    &&
+        rect1Bounds.bottom > rect2Bounds.bottom ){
+
+        return true;
+    }
+
+    // check non-point (plus-shaped) overlap where rect2 is "vertical"
+    if (rect2Bounds.left   > rect1Bounds.left   &&
+        rect2Bounds.right  < rect1Bounds.right  &&
+        rect2Bounds.top    < rect1Bounds.top    &&
+        rect2Bounds.bottom > rect1Bounds.bottom ){
+
+        return true;
+    }
+
+    // check corner overlaps.  Corners of rect1 against bounds of rect2
+    if (isPointInsideRectangle(rect1Bounds.left,  rect1Bounds.top,    rect2Bounds) ||
+        isPointInsideRectangle(rect1Bounds.left,  rect1Bounds.bottom, rect2Bounds) ||
+        isPointInsideRectangle(rect1Bounds.right, rect1Bounds.top,    rect2Bounds) ||
+        isPointInsideRectangle(rect1Bounds.right, rect1Bounds.bottom, rect2Bounds) ){
+
+        return true;
+    }
+
+    // check corner overlaps.  Corners of rect2 against bounds of rect1
+    if (isPointInsideRectangle(rect2Bounds.left,  rect2Bounds.top,    rect1Bounds) ||
+        isPointInsideRectangle(rect2Bounds.left,  rect2Bounds.bottom, rect1Bounds) ||
+        isPointInsideRectangle(rect2Bounds.right, rect2Bounds.top,    rect1Bounds) ||
+        isPointInsideRectangle(rect2Bounds.right, rect2Bounds.bottom, rect1Bounds) ){
+
+        return true;
+    }
+
+    // no overlaps found
+    return false;
+
+} // =========================================================================== end function doTheseRectanglesOverlap
+
+function isPointInsideRectangle(pointX, pointY, rectBounds){
+
+    // first, check that recangle isn't invalid
+    if (rectBounds.right  < rectBounds.left ||
+        rectBounds.bottom < rectBounds.top  ){
+
+        console.log('invalid rectangle in isPointInsideRectangle');
+        return false;
+    }
+
+    // check point against rectangle
+    if (pointX > rectBounds.left   &&
+        pointX < rectBounds.right  &&
+        pointY > rectBounds.top    &&
+        pointY < rectBounds.bottom ){
+
+        return true;
+    }
+
+    // no overlap found
+    return false;
+
+} // =========================================================================== end function isPointInsideRectangle
