@@ -36,6 +36,10 @@ const BUNKERS_ORIGIN_X = Math.floor((canvasWidth - BUNKER_LAYOUT_WIDTH)/2);
 const BUNKERS_ORIGIN_Y = 500;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
 const BUNKERS_BOTTOM = BUNKERS_TOP + BUNKER_HEIGHT;
+var bunkerDomainBounds = {  top:BUNKERS_ORIGIN_Y,
+                            bottom:BUNKERS_ORIGIN_Y + BUNKER_HEIGHT, 
+                            left:BUNKERS_ORIGIN_X,
+                            right:BUNKERS_ORIGIN_X + BUNKER_LAYOUT_WIDTH };
 
 // ============================================================================= end vars
 

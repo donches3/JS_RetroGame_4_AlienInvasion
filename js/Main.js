@@ -44,7 +44,7 @@ function moveAll() {
     moveFormation();
     manageSliders();
 
-    moveBullets(); // bullets should be the last thing moved
+    manageBullets(); // bullets should be the last thing moved
 } // =========================================================================== end function moveAll
 
 function drawAll() {

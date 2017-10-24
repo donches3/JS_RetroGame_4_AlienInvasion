@@ -25,6 +25,22 @@ var enemyFireCoolDownCounter = ENEMY_FIRE_COOL_DOWN;
 
 // ============================================================================= end vars
 
+function manageBullets(){
+
+    // increment bullet positions
+    moveBullets();
+
+    // increment (shrink) all blasts and destroy the ones with minimum radius
+    incrementBlasts();
+
+    // check and resolve all bullet collisions
+    collideBullets();
+
+    // fire bullets (both player and enemy)
+    fireAllBullets();
+
+} // =========================================================================== end function manageBullets
+
 function drawBullet(x, y){
     colorRectCentered(x, y, BULLET_WIDTH, BULLET_HEIGHT, 'white');
 } // =========================================================================== end function drawBullet
@@ -66,24 +82,26 @@ function moveBullets(){
         enemyBullets[i].positionX += enemyBullets[i].velocityX; // in this game, x velocity is always zero --- ////////
     }
 
-    // increment (shrink) all blasts and destroy the ones with minimum radius
-    // this loop must start at the end and increment backwards
-    // because the length of the array is changing while this loop is running
-    for (var i = allBlasts.length - 1; i >= 0; i--){
-        allBlasts[i].radius -= 1;
-        if (allBlasts[i].radius <= BLAST_RADIUS_MINIMUM){
-            // destroy this blast without leaving gap in array
-            destroyElementOfArray(allBlasts, i);
-        }
-    }
-
-    // check and resolve all bullet collisions
-    collideBullets();
-
-    // fire bullets (both player and alien)
-    fireAllBullets();
-
 } // =========================================================================== end function moveBullets
+
+function collideBullets(){
+
+    collideBulletsWithTopOfWorld(playerBullets);
+
+    collideBulletsWithGround(enemyBullets);
+
+    collideBulletsWithSliders(playerBullets);
+
+    collideBulletsWithBunkers(playerBullets);
+    collideBulletsWithBunkers(enemyBullets);
+
+    collideBulletsWithFormation(playerBullets);
+
+    collideBulletsWithPlayer(enemyBullets);
+
+    collideBulletsWithBullets();
+
+} // =========================================================================== end function collideBullets
 
 function collideBulletsWithTopOfWorld(whichBullets){
 
@@ -132,8 +150,8 @@ function collideBulletsWithSliders(whichBullets){
 
                 var thisSliderBounds = getSliderBounds(j)
 
-                if (whichBullets[i].positionX > thisSliderBounds.left &&
-                    whichBullets[i].positionX < thisSliderBounds.right){ // if in slider bounds (X alignment)
+                // check bullet position against this slider for HIT
+                if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, thisSliderBounds)){
 
                     hitSlider(j);
                     destroyBullet(whichBullets, i);
@@ -156,29 +174,26 @@ function collideBulletsWithBullets(){
     // Both outer and inner loops must start at the end and increment backwards
     // because the lengths of both arrays are changing while these loops are running
     for (var i = playerBullets.length - 1; i >= 0; i--){ // does not run if array is empty
-        var playerBulletCollisionTop    = playerBullets[i].positionY - BULLET_HEIGHT/2;
-        var playerBulletCollisionBottom = playerBullets[i].positionY + BULLET_HEIGHT/2 - playerBullets[i].velocityY; // prevents tunnelling
-        var playerBulletCollisionRight  = playerBullets[i].positionX + BULLET_WIDTH/2;
-        var playerBulletCollisionLeft   = playerBullets[i].positionX - BULLET_WIDTH/2;
+        var playerBulletBounds = {top:0, bottom:0, right:0, left:0};
+        playerBulletBounds.top    = playerBullets[i].positionY - BULLET_HEIGHT/2;
+        playerBulletBounds.bottom = playerBullets[i].positionY + BULLET_HEIGHT/2 - playerBullets[i].velocityY; // prevents tunnelling
+        playerBulletBounds.right  = playerBullets[i].positionX + BULLET_WIDTH/2;
+        playerBulletBounds.left   = playerBullets[i].positionX - BULLET_WIDTH/2;
 
         for (var j = enemyBullets.length - 1; j >= 0; j--){ // does not run if array is empty
-            var enemyBulletCollisionTop    = enemyBullets[j].positionY - BULLET_HEIGHT/2 - enemyBullets[j].velocityY; // prevents tunnelling
-            var enemyBulletCollisionBottom = enemyBullets[j].positionY + BULLET_HEIGHT/2;
-            var enemyBulletCollisionRight  = enemyBullets[j].positionX + BULLET_WIDTH/2;
-            var enemyBulletCollisionLeft   = enemyBullets[j].positionX - BULLET_WIDTH/2;
+            var enemyBulletBounds = {top:0, bottom:0, right:0, left:0};
+            enemyBulletBounds.top    = enemyBullets[j].positionY - BULLET_HEIGHT/2 - enemyBullets[j].velocityY; // prevents tunnelling
+            enemyBulletBounds.bottom = enemyBullets[j].positionY + BULLET_HEIGHT/2;
+            enemyBulletBounds.right  = enemyBullets[j].positionX + BULLET_WIDTH/2;
+            enemyBulletBounds.left   = enemyBullets[j].positionX - BULLET_WIDTH/2;
 
-            if (playerBulletCollisionRight > enemyBulletCollisionLeft &&
-                playerBulletCollisionLeft < enemyBulletCollisionRight){ // X alignment
+            // check bullet bounds for overlap for a HIT
+            if(doTheseRectanglesOverlap(playerBulletBounds, enemyBulletBounds)){
+                destroyBullet(playerBullets, i);
+                destroyBullet(enemyBullets, j);
+                j = -1; // breaks the j loop
+            } // end if overlap
 
-                if (playerBulletCollisionTop < enemyBulletCollisionBottom &&
-                    playerBulletCollisionBottom > enemyBulletCollisionTop){ // Y alignment, HIT
-
-                    destroyBullet(playerBullets, i);
-                    destroyBullet(enemyBullets, j);
-                    j = -1; // breaks the j loop
-                } // end if Y alignment
-
-            } // end if X alignment
         } // end for j
     } // end for i
 
@@ -192,20 +207,21 @@ function collideBulletsWithBunkers(whichBullets){
     // because the lengths of both arrays are changing while these loops are running
     for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
 
-        if (whichBullets[i].positionY < BUNKERS_BOTTOM &&
-            whichBullets[i].positionY > BUNKERS_TOP){ // if in bunker domain (Y alignment)
+        // if bullet is in bunker domain
+        if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, bunkerDomainBounds)){
 
             for (var j = bunkersAll.length - 1; j >= 0; j--){ // loop through bunkers
 
                 var thisBunkerBounds = bunkersAllBounds[j];
 
-                if (whichBullets[i].positionX > thisBunkerBounds.left &&
-                    whichBullets[i].positionX < thisBunkerBounds.right){ // if in this bunker (X alignment)
+                // if bullet is in this bunker
+                if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, thisBunkerBounds)){
 
                     // get index of block (normal test)
                     var blockIndex = getBlockIndexHere(j, whichBullets[i].positionX, whichBullets[i].positionY);
 
                     // to prevent tunnelling, finds a position halfway between current and previous position
+                    // this won't work reliably for high bullet velocities --------------------------------- NOTE
                     var bulletBackX = whichBullets[i].positionX - Math.floor(whichBullets[i].velocityX/2);
                     var bulletBackY = whichBullets[i].positionY - Math.floor(whichBullets[i].velocityY/2);
                     var blockIndexBack = getBlockIndexHere(j, bulletBackX, bulletBackY);
@@ -254,10 +270,7 @@ function collideBulletsWithFormation(whichBullets){
         var alienBounds = {top:0, bottom:0, left:0, right:0};
 
         // check this bullet against formation bounds
-        if (whichBullets[i].positionY <= formationBounds.bottom &&
-            whichBullets[i].positionY >= formationBounds.top &&
-            whichBullets[i].positionX <= formationBounds.right &&
-            whichBullets[i].positionX >= formationBounds.left){
+        if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, formationBounds)){
 
             // find which cell (index) bullet is in
             cellIndex = getFormationIndexHere(whichBullets[i].positionX, whichBullets[i].positionY);
@@ -271,18 +284,8 @@ function collideBulletsWithFormation(whichBullets){
                 // get the occupant's bounds
                 alienBounds = getAlienBounds(cellIndex);
 
-                // temp draw box around bounds (this might not show up)
-                colorRect(  alienBounds.left - 2,
-                            alienBounds.top - 2,
-                            (alienBounds.right - alienBounds.left) + 4,
-                            (alienBounds.bottom - alienBounds.top) + 4,
-                            'red'); // ----------------------------------------------------------------------- ////////////////
-
                 // check this bullet against occupant's bounds for a hit
-                if (whichBullets[i].positionY <= alienBounds.bottom &&
-                    whichBullets[i].positionY >= alienBounds.top &&
-                    whichBullets[i].positionX <= alienBounds.right &&
-                    whichBullets[i].positionX >= alienBounds.left){
+                if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, alienBounds)){
 
                     // award score
                     gameScore += (cellKindHere * 100);
@@ -302,25 +305,6 @@ function collideBulletsWithFormation(whichBullets){
     } // end for bullet
 
 } // =========================================================================== end function collideBulletsWithFormation
-
-function collideBullets(){
-
-    collideBulletsWithTopOfWorld(playerBullets);
-
-    collideBulletsWithGround(enemyBullets);
-
-    collideBulletsWithSliders(playerBullets);
-
-    collideBulletsWithBunkers(playerBullets);
-    collideBulletsWithBunkers(enemyBullets);
-
-    collideBulletsWithFormation(playerBullets);
-
-    collideBulletsWithPlayer(enemyBullets);
-
-    collideBulletsWithBullets();
-
-} // =========================================================================== end function collideBullets
 
 function fireAllBullets(){
 
@@ -382,3 +366,18 @@ function createBlast(blastPosX, blastPosY){
     allBlasts[allBlasts.length - 1].radius = BLAST_RADIUS;
 
 } // =========================================================================== end function createBlast
+
+function incrementBlasts(){
+
+    // increment (shrink) all blasts and destroy the ones with minimum radius
+    // this loop must start at the end and increment backwards
+    // because the length of the array is changing while this loop is running
+    for (var i = allBlasts.length - 1; i >= 0; i--){
+        allBlasts[i].radius -= 1;
+        if (allBlasts[i].radius <= BLAST_RADIUS_MINIMUM){
+            // destroy this blast without leaving gap in array
+            destroyElementOfArray(allBlasts, i);
+        }
+    }
+
+} // =========================================================================== end function incrementBlasts

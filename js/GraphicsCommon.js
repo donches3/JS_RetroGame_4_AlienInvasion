@@ -65,7 +65,7 @@ function destroyElementOfArray(whichArray, index){
 
 function doTheseRectanglesOverlap(rect1Bounds, rect2Bounds){
 
-    // first, check that recangles aren't invalid
+    // first, check that recangles aren't invalid or zero size
     if (rect1Bounds.right  < rect1Bounds.left ||
         rect1Bounds.bottom < rect1Bounds.top  ||
         rect2Bounds.right  < rect2Bounds.left ||
@@ -118,7 +118,7 @@ function doTheseRectanglesOverlap(rect1Bounds, rect2Bounds){
 
 function isPointInsideRectangle(pointX, pointY, rectBounds){
 
-    // first, check that recangle isn't invalid
+    // first, check that recangle isn't invalid or zero size
     if (rectBounds.right  < rectBounds.left ||
         rectBounds.bottom < rectBounds.top  ){
 
