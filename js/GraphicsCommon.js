@@ -58,6 +58,21 @@ function arrayIndexToRowCol(index, numCols){
     return rowCol;
 } // =========================================================================== end function arrayIndexToRowCol
 
+function getArrayCellBounds(index, arrayOriginX, arrayOriginY, cellWidth, cellHeight, numCols){
+    var bounds = {top:0, bottom:0, left:0, right:0};
+    var rowCol = {row:0, col:0};
+
+    rowCol = arrayIndexToRowCol(index, numCols);
+
+    bounds.top = arrayOriginY + (rowCol.row * cellHeight);
+    bounds.bottom = bounds.top + cellHeight;
+    bounds.left = arrayOriginX + (rowCol.col * cellWidth);
+    bounds.right = bounds.left + cellWidth;
+
+    return bounds;
+
+} // =========================================================================== end function getBlockBounds
+
 function destroyElementOfArray(whichArray, index){
     // destroy this element without leaving gap in array
     whichArray.splice(index, 1);

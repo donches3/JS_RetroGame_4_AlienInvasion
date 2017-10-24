@@ -37,7 +37,7 @@ const BUNKERS_ORIGIN_Y = 500;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
 const BUNKERS_BOTTOM = BUNKERS_TOP + BUNKER_HEIGHT;
 var bunkerDomainBounds = {  top:BUNKERS_ORIGIN_Y,
-                            bottom:BUNKERS_ORIGIN_Y + BUNKER_HEIGHT, 
+                            bottom:BUNKERS_ORIGIN_Y + BUNKER_HEIGHT,
                             left:BUNKERS_ORIGIN_X,
                             right:BUNKERS_ORIGIN_X + BUNKER_LAYOUT_WIDTH };
 
@@ -137,3 +137,70 @@ function getBlockIndexHere(bunkerID, x, y){
     return blockindex;
 
 } // =========================================================================== end function getBlockIndexHere
+
+function collideFormationWithBunkers(){
+    var cellKindHere;
+    var alienBounds = {top:0, bottom:0, left:0, right:0};
+    var blockBounds = {top:0, bottom:0, left:0, right:0};
+
+    // check if formation bounds overlaps bunker domain
+    if (doTheseRectanglesOverlap(formationBounds, bunkerDomainBounds)){
+
+        // loop through formation backwards, (bottom first)
+        for (var alienID = alienGrid.length - 1; alienID >= 0; alienID--){
+
+            // what is in this cell
+            cellKindHere = alienGrid[alienID];
+
+            // if cell occupied
+            if (cellKindHere != ALIEN_NONE && cellKindHere != ALIEN_EXPLOSION && cellKindHere != undefined){
+
+                // get the occupant's bounds
+                alienBounds = getAlienBounds(alienID);
+
+                // optimization:  break loop if bounds is above bunker domain
+                if (alienBounds.bottom < bunkerDomainBounds.top){
+                    alienID = -1; // breaks loop
+                } else {
+
+                    // loop through bunkers
+                    for (var bunkerID = 0; bunkerID < bunkersAll.length; bunkerID++){
+
+                        // if this alien overlaps this bunker
+                        if (doTheseRectanglesOverlap(alienBounds, bunkersAllBounds[bunkerID])){
+                            console.log('alien ' + alienID + ' is in bunker ' + bunkerID);
+
+                            // loop through this bunker's blocks
+                            for (var blockID = 0; blockID < BUNKER_ROWS * BUNKER_COLS; blockID++){
+
+                                // get this block bounds
+                                blockBounds = getArrayCellBounds(   blockID,
+                                                                    bunkersAllBounds[bunkerID].left,
+                                                                    bunkersAllBounds[bunkerID].top,
+                                                                    BUNKER_BLOCK_WIDTH,
+                                                                    BUNKER_BLOCK_HEIGHT,
+                                                                    BUNKER_COLS);
+
+                                // if this alien overlaps this block
+                                if (doTheseRectanglesOverlap(alienBounds, blockBounds)){
+
+                                    // destroy block
+                                    bunkersAll[bunkerID][blockID] = BUNKER_DAMAGE;
+
+                                } // end if overlap block
+
+                            } // end for blockID
+
+                        } // end if overlap
+
+                    } // end for bunkerID
+
+                } // end if else
+
+            } // end if occupied
+
+        } // end for i (alienGrid index)
+
+    } // end if formation
+
+} // =========================================================================== end function collideFormationWithBunkers

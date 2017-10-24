@@ -80,6 +80,27 @@ function loadFormation(whichFormation) {
     formationHoldCounter = Math.floor(alienCounter/2);
 } // =========================================================================== end function loadFormation
 
+function moveFormation(){
+
+    // the formation only moves once the hold counter gets to zero
+    if (formationHoldCounter <= 0){
+
+        incrementFormation();
+        UpdateFormationBounds();
+        removeFormationExplosions();
+        collideFormationWithBunkers();
+        formationHoldCounter = Math.floor(alienCounter/2); // reset hold counter
+        frameToggle = !frameToggle; // switch frame for two-frame aliens
+
+        // detect ground impact                                                 NOTE game over condition
+        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
+            gameOver = true;
+        }
+    }
+
+    formationHoldCounter--;
+} // =========================================================================== end function moveFormation
+
 function drawFormation() {
 
     var arrayIndex = 0;
@@ -234,26 +255,6 @@ function UpdateFormationBounds(){
     formationBounds.right  = getFormationRight();
 
 } // =========================================================================== end function UpdateFormationBounds
-
-function moveFormation(){
-
-    // the formation only moves once the hold counter gets to zero
-    if (formationHoldCounter <= 0){
-
-        incrementFormation();
-        UpdateFormationBounds();
-        removeFormationExplosions();
-        formationHoldCounter = Math.floor(alienCounter/2); // reset hold counter
-        frameToggle = !frameToggle; // switch frame for two-frame aliens
-
-        // detect ground impact                                                 NOTE game over condition
-        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
-            gameOver = true;
-        }
-    }
-
-    formationHoldCounter--;
-} // =========================================================================== end function moveFormation
 
 function incrementFormation(){
 
