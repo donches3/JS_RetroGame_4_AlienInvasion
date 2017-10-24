@@ -254,10 +254,10 @@ function collideBulletsWithFormation(whichBullets){
         var alienBounds = {top:0, bottom:0, left:0, right:0};
 
         // check this bullet against formation bounds
-        if (whichBullets[i].positionY <= formationBottom &&
-            whichBullets[i].positionY >= formationTop &&
-            whichBullets[i].positionX <= formationRight &&
-            whichBullets[i].positionX >= formationLeft){
+        if (whichBullets[i].positionY <= formationBounds.bottom &&
+            whichBullets[i].positionY >= formationBounds.top &&
+            whichBullets[i].positionX <= formationBounds.right &&
+            whichBullets[i].positionX >= formationBounds.left){
 
             // find which cell (index) bullet is in
             cellIndex = getFormationIndexHere(whichBullets[i].positionX, whichBullets[i].positionY);

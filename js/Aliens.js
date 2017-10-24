@@ -12,16 +12,19 @@ var formationOriginX = FORMATION_START_X;
 var formationOriginY = FORMATION_START_Y;
 
 // formation bounds
-var formationTop;
-var formationLeft;
-var formationBottom;
-var formationRight;
+// var formationBounds.top;
+// var formationBounds.left;
+// var formationBounds.bottom;
+// var formationBounds.right;
+var formationBounds = {top:0, bottom:0, left:0, right:0};
 
 // full formation bounds.  these don't account for empty cells
-var fullFormationTop;
-var fullFormationLeft;
-var fullFormationBottom;
-var fullFormationRight;
+// var fullFormationBounds.top;
+// var fullFormationBounds.left;
+// var fullFormationBounds.bottom;
+// var fullFormationBounds.right;
+var fullFormationBounds = {top:0, bottom:0, left:0, right:0};
+
 
 var formationOne = [3,3,3,3,3,3,3,3,3,3,3,
                     2,2,2,2,2,2,2,2,2,2,2,
@@ -89,10 +92,10 @@ function drawFormation() {
     //             formationOriginY,
     //             ALIEN_CELL_WIDTH * ALIEN_GRID_COLS,
     //             ALIEN_CELL_HEIGHT * ALIEN_GRID_ROWS, '#222222'); // ------------////////////////
-    // colorRect(  formationLeft,
-    //             formationTop,
-    //             formationRight - formationLeft,
-    //             formationBottom - formationTop, '#333333'); // -----------------////////////////
+    // colorRect(  formationBounds.left,
+    //             formationBounds.top,
+    //             formationBounds.right - formationBounds.left,
+    //             formationBounds.bottom - formationBounds.top, '#333333'); // -----------------////////////////
 
     // cycle through rows
     for(var eachRow = 0; eachRow < ALIEN_GRID_ROWS; eachRow++) {
@@ -219,16 +222,16 @@ function getFormationRight(){
 function UpdateFormationBounds(){
 
     // full bounds don't account for empty cells.  I may delete these later
-    fullFormationTop    = formationOriginY;  //  TOP
-    fullFormationLeft   = formationOriginX;  //  LEFT
-    fullFormationBottom = formationOriginY + (ALIEN_CELL_HEIGHT * ALIEN_GRID_ROWS);  //  BOTTOM
-    fullFormationRight  = formationOriginX + (ALIEN_CELL_WIDTH * ALIEN_GRID_COLS);  //  RIGHT
+    fullFormationBounds.top    = formationOriginY;  //  TOP
+    fullFormationBounds.left   = formationOriginX;  //  LEFT
+    fullFormationBounds.bottom = formationOriginY + (ALIEN_CELL_HEIGHT * ALIEN_GRID_ROWS);  //  BOTTOM
+    fullFormationBounds.right  = formationOriginX + (ALIEN_CELL_WIDTH * ALIEN_GRID_COLS);  //  RIGHT
 
     // these bounds account for empty cells (except when the formation is empty)
-    formationTop    = getFormationTop();
-    formationLeft   = getFormationLeft();
-    formationBottom = getFormationBottom();
-    formationRight  = getFormationRight();
+    formationBounds.top    = getFormationTop();
+    formationBounds.left   = getFormationLeft();
+    formationBounds.bottom = getFormationBottom();
+    formationBounds.right  = getFormationRight();
 
 } // =========================================================================== end function UpdateFormationBounds
 
@@ -244,7 +247,7 @@ function moveFormation(){
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
         // detect ground impact                                                 NOTE game over condition
-        if (formationBottom >= canvas.height - GROUND_LEVEL){
+        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
             gameOver = true;
         }
     }
@@ -254,10 +257,10 @@ function moveFormation(){
 
 function incrementFormation(){
 
-    if (isMovingRight && formationRight <= canvas.width){ // movine right and not at right edge
+    if (isMovingRight && formationBounds.right <= canvas.width){ // movine right and not at right edge
         // increment right
         formationOriginX+= FORMATION_INCREMENT_X;
-    } else if (!isMovingRight && formationLeft >= 0){ // moving left and not at left edge
+    } else if (!isMovingRight && formationBounds.left >= 0){ // moving left and not at left edge
         // increment left
         formationOriginX-= FORMATION_INCREMENT_X;
     } else { // at left or right edge
