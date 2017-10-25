@@ -32,8 +32,8 @@ var testValue5 = 909;
 
 function drawGUI() {
 
-    testLabel1 = 'number of aliens:  ';
-    testValue1 = alienCounter;
+    testLabel1 = 'number of slider bullets:  ';
+    testValue1 = sliderBullets.length;
     //
     testLabel2 = 'number of sliders:  ';
     testValue2 = sliders.length;

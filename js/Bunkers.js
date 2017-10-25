@@ -31,7 +31,7 @@ const BUNKER_LAYOUT_WIDTH = 640;
 const BUNKER_GAP_WIDTH = Math.floor((BUNKER_LAYOUT_WIDTH - (BUNKER_WIDTH * BUNKER_QUANTITY)) / (BUNKER_QUANTITY - 1));
 // for some reason, canvas.width is undifined here
 // const BUNKERS_ORIGIN_X = Math.floor((canvas.width - BUNKER_LAYOUT_WIDTH)/2);
-var canvasWidth = 900;
+var canvasWidth = 900; // ------------------------------------------------------////////////////
 const BUNKERS_ORIGIN_X = Math.floor((canvasWidth - BUNKER_LAYOUT_WIDTH)/2);
 const BUNKERS_ORIGIN_Y = 500;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
@@ -47,7 +47,7 @@ var bunkerDomainBounds = {  top:BUNKERS_ORIGIN_Y,
 function loadBunkers(whichBunker){
 
     for (var i = 0; i < BUNKER_QUANTITY; i++){
-        var bunkerFresh = whichBunker.slice(); // copies all values in bunkerTest1 into bunkerFresh
+        var bunkerFresh = whichBunker.slice(); // copies all values in whichBunker into bunkerFresh
 
         bunkersAll.push(bunkerFresh); // adds bunkerFresh array to end of array
         createThisBunkerBounds();
@@ -58,11 +58,11 @@ function loadBunkers(whichBunker){
 function createThisBunkerBounds(){
     var bunkerBoundsObject = {top:0, bottom:0, left:0, right:0};
 
-    bunkersAllBounds.push(bunkerBoundsObject); // adds bunkerBoundsObject array to end of array
+    bunkersAllBounds.push(bunkerBoundsObject); // adds bunkerBoundsObject to end of array
     var i = bunkersAllBounds.length - 1;
-    bunkersAllBounds[i].top = BUNKERS_TOP;
-    bunkersAllBounds[i].bottom = BUNKERS_BOTTOM;
-    bunkersAllBounds[i].left = BUNKERS_ORIGIN_X + (i * (BUNKER_WIDTH + BUNKER_GAP_WIDTH));
+    bunkersAllBounds[i].top = bunkerDomainBounds.top;
+    bunkersAllBounds[i].bottom = bunkerDomainBounds.bottom;
+    bunkersAllBounds[i].left = bunkerDomainBounds.left + (i * (BUNKER_WIDTH + BUNKER_GAP_WIDTH));
     bunkersAllBounds[i].right = bunkersAllBounds[i].left + BUNKER_WIDTH;
 
 } // =========================================================================== end function createThisBunkerBounds
@@ -114,20 +114,20 @@ function getBlockIndexHere(bunkerID, x, y){
     // find column
     col = Math.floor((x - bunkerOriginX)/BUNKER_BLOCK_WIDTH);
 
-    if(col >= BUNKER_COLS){ // correct edge error
-        col--;
-    }
-    if(col < 0){
-        col++;
-    }
-
     // find row
     row = Math.floor((y - bunkerOriginY)/BUNKER_BLOCK_HEIGHT);
 
-    if(row >= BUNKER_ROWS){ // correct edge error
+    // error correction
+    if(col >= BUNKER_COLS){ // correct edge error on right
+        col--;
+    }
+    if(col < 0){ // correct edge error on left
+        col++;
+    }
+    if(row >= BUNKER_ROWS){ // correct edge error on bottom
         row--;
     }
-    if(row < 0){
+    if(row < 0){ // correct edge error on top
         row++;
     }
 
@@ -168,25 +168,22 @@ function collideFormationWithBunkers(){
 
                         // if this alien overlaps this bunker
                         if (doTheseRectanglesOverlap(alienBounds, bunkersAllBounds[bunkerID])){
-                            console.log('alien ' + alienID + ' is in bunker ' + bunkerID);
 
                             // loop through this bunker's blocks
                             for (var blockID = 0; blockID < BUNKER_ROWS * BUNKER_COLS; blockID++){
 
                                 // get this block bounds
-                                blockBounds = getArrayCellBounds(   blockID,
-                                                                    bunkersAllBounds[bunkerID].left,
-                                                                    bunkersAllBounds[bunkerID].top,
-                                                                    BUNKER_BLOCK_WIDTH,
-                                                                    BUNKER_BLOCK_HEIGHT,
-                                                                    BUNKER_COLS);
+                                blockBounds = getArrayCellBounds(   blockID,                            // cell index
+                                                                    bunkersAllBounds[bunkerID].left,    // array origin X
+                                                                    bunkersAllBounds[bunkerID].top,     // array origin Y
+                                                                    BUNKER_BLOCK_WIDTH,                 // cell width
+                                                                    BUNKER_BLOCK_HEIGHT,                // cell height
+                                                                    BUNKER_COLS);                       // number of columns
 
                                 // if this alien overlaps this block
                                 if (doTheseRectanglesOverlap(alienBounds, blockBounds)){
-
                                     // destroy block
                                     bunkersAll[bunkerID][blockID] = BUNKER_DAMAGE;
-
                                 } // end if overlap block
 
                             } // end for blockID

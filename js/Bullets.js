@@ -1,27 +1,36 @@
 const BULLET_WIDTH = 4;
 const BULLET_HEIGHT = 15;
+
 const MAX_PLAYER_BULLETS = 1;
-const MAX_ENEMY_BULLETS = 2;
+const MAX_FORMATION_BULLETS = 2;
+const MAX_SLIDER_BULLETS = 12;
+
 const PLAYER_BULLET_VELOCITY = -20; // pixels per frame, also, negative value goes up
-const ENEMY_BULLET_VELOCITY = 10;
+const ENEMY_BULLET_VELOCITY = 10; // for both slider and formation bullets
+
 const BLAST_RADIUS = 10;
 const BLAST_RADIUS_MINIMUM = 2;
 
 var playerBullets = [];
-var enemyBullets = [];
+var formationBullets = [];
+var sliderBullets = [];
 var allBlasts = [];
 
 var fireButtonPressed = false;
 
 var playerBulletStartX = 50; // temporary hard-coded values --------------------////////////////
 var playerBulletStartY = 630;
-var enemyBulletStartX = 50; // temporary hard-coded values ---------------------////////////////
-var enemyBulletStartY = 300;
+var formationBulletStartX = 50; // temporary hard-coded values ---------------------////////////////
+var formationBulletStartY = 300;
+var sliderBulletStartX = 50; // temporary hard-coded values ---------------------////////////////
+var sliderBulletStartY = SLIDERS_BOTTOM;
 var spread; // temp variable to randomize firing positions ---------------------////////////////
 
 var fireHold = 6; // temorary counter ------------------------------------------////////////////
-const ENEMY_FIRE_COOL_DOWN = 6;
-var enemyFireCoolDownCounter = ENEMY_FIRE_COOL_DOWN;
+const FORMATION_FIRE_COOL_DOWN = 6;
+var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
+const SLIDER_FIRE_COOL_DOWN = 7;
+var sliderFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
 
 // ============================================================================= end vars
 
@@ -45,6 +54,13 @@ function drawBullet(x, y){
     colorRectCentered(x, y, BULLET_WIDTH, BULLET_HEIGHT, 'white');
 } // =========================================================================== end function drawBullet
 
+function drawTheseBullets(whichBullets){
+    // draw all bullets in this array
+    for (var i = 0; i < whichBullets.length; i++){ // does not run if array is empty
+        drawBullet(whichBullets[i].positionX, whichBullets[i].positionY);
+    }
+} // =========================================================================== end function drawTheseBullets
+
 function drawBlast(x, y, radius){
     colorCircle(x, y, radius, 'white');
 } // =========================================================================== end function drawBlast
@@ -52,14 +68,11 @@ function drawBlast(x, y, radius){
 function drawBullets(){
 
     // draw all player bullets
-    for (var i = 0; i < playerBullets.length; i++){ // does not run if array is empty
-        drawBullet(playerBullets[i].positionX, playerBullets[i].positionY);
-    }
-
-    // draw all enemy bullets
-    for (var i = 0; i < enemyBullets.length; i++){ // does not run if array is empty
-        drawBullet(enemyBullets[i].positionX, enemyBullets[i].positionY);
-    }
+    drawTheseBullets(playerBullets);
+    // draw all enemy formation bullets
+    drawTheseBullets(formationBullets);
+    // draw all enemy slider bullets
+    drawTheseBullets(sliderBullets);
 
     // draw all blasts
     for (var i = 0; i < allBlasts.length; i++){ // does not run if array is empty
@@ -68,19 +81,22 @@ function drawBullets(){
 
 } // =========================================================================== end function drawBullets
 
+function incrementTheseBullets(whichBullets){
+        // increment all bullets in this array
+        for (var i = 0; i < whichBullets.length; i++){ // does not run if array is empty
+            whichBullets[i].positionY += whichBullets[i].velocityY;
+            whichBullets[i].positionX += whichBullets[i].velocityX; // in this game, x velocity is always zero --- ////////
+        }
+} // =========================================================================== end function incrementTheseBullets
+
 function moveBullets(){
 
     // increment all player bullets
-    for (var i = 0; i < playerBullets.length; i++){ // does not run if array is empty
-        playerBullets[i].positionY += playerBullets[i].velocityY;
-        playerBullets[i].positionX += playerBullets[i].velocityX; // in this game, x velocity is always zero --- ////////
-    }
-
-    // increment all enemy bullets
-    for (var i = 0; i < enemyBullets.length; i++){ // does not run if array is empty
-        enemyBullets[i].positionY += enemyBullets[i].velocityY;
-        enemyBullets[i].positionX += enemyBullets[i].velocityX; // in this game, x velocity is always zero --- ////////
-    }
+    incrementTheseBullets(playerBullets);
+    // increment all enemy formation bullets
+    incrementTheseBullets(formationBullets);
+    // increment all enemy slider bullets
+    incrementTheseBullets(sliderBullets);
 
 } // =========================================================================== end function moveBullets
 
@@ -88,18 +104,22 @@ function collideBullets(){
 
     collideBulletsWithTopOfWorld(playerBullets);
 
-    collideBulletsWithGround(enemyBullets);
+    collideBulletsWithGround(formationBullets);
+    collideBulletsWithGround(sliderBullets);
 
     collideBulletsWithSliders(playerBullets);
 
     collideBulletsWithBunkers(playerBullets);
-    collideBulletsWithBunkers(enemyBullets);
+    collideBulletsWithBunkers(formationBullets);
+    collideBulletsWithBunkers(sliderBullets);
 
     collideBulletsWithFormation(playerBullets);
 
-    collideBulletsWithPlayer(enemyBullets);
+    collideBulletsWithPlayer(formationBullets);
+    collideBulletsWithPlayer(sliderBullets);
 
-    collideBulletsWithBullets();
+    collideBulletsWithBullets(playerBullets, formationBullets);
+    collideBulletsWithBullets(playerBullets, sliderBullets);
 
 } // =========================================================================== end function collideBullets
 
@@ -167,30 +187,30 @@ function collideBulletsWithSliders(whichBullets){
 
 } // =========================================================================== end function collideBulletsWithSliders
 
-function collideBulletsWithBullets(){
+function collideBulletsWithBullets(theseBullets, thoseBullets){
 
     // ===== check for bullet/bullet collisions =====
 
     // Both outer and inner loops must start at the end and increment backwards
     // because the lengths of both arrays are changing while these loops are running
-    for (var i = playerBullets.length - 1; i >= 0; i--){ // does not run if array is empty
-        var playerBulletBounds = {top:0, bottom:0, right:0, left:0};
-        playerBulletBounds.top    = playerBullets[i].positionY - BULLET_HEIGHT/2;
-        playerBulletBounds.bottom = playerBullets[i].positionY + BULLET_HEIGHT/2 - playerBullets[i].velocityY; // prevents tunnelling
-        playerBulletBounds.right  = playerBullets[i].positionX + BULLET_WIDTH/2;
-        playerBulletBounds.left   = playerBullets[i].positionX - BULLET_WIDTH/2;
+    for (var i = theseBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+        var theseBulletBounds = {top:0, bottom:0, right:0, left:0};
+        theseBulletBounds.top    = theseBullets[i].positionY - BULLET_HEIGHT/2;
+        theseBulletBounds.bottom = theseBullets[i].positionY + BULLET_HEIGHT/2 - theseBullets[i].velocityY; // prevents tunnelling
+        theseBulletBounds.right  = theseBullets[i].positionX + BULLET_WIDTH/2;
+        theseBulletBounds.left   = theseBullets[i].positionX - BULLET_WIDTH/2;
 
-        for (var j = enemyBullets.length - 1; j >= 0; j--){ // does not run if array is empty
-            var enemyBulletBounds = {top:0, bottom:0, right:0, left:0};
-            enemyBulletBounds.top    = enemyBullets[j].positionY - BULLET_HEIGHT/2 - enemyBullets[j].velocityY; // prevents tunnelling
-            enemyBulletBounds.bottom = enemyBullets[j].positionY + BULLET_HEIGHT/2;
-            enemyBulletBounds.right  = enemyBullets[j].positionX + BULLET_WIDTH/2;
-            enemyBulletBounds.left   = enemyBullets[j].positionX - BULLET_WIDTH/2;
+        for (var j = thoseBullets.length - 1; j >= 0; j--){ // does not run if array is empty
+            var thoseBulletBounds = {top:0, bottom:0, right:0, left:0};
+            thoseBulletBounds.top    = thoseBullets[j].positionY - BULLET_HEIGHT/2 - thoseBullets[j].velocityY; // prevents tunnelling
+            thoseBulletBounds.bottom = thoseBullets[j].positionY + BULLET_HEIGHT/2;
+            thoseBulletBounds.right  = thoseBullets[j].positionX + BULLET_WIDTH/2;
+            thoseBulletBounds.left   = thoseBullets[j].positionX - BULLET_WIDTH/2;
 
             // check bullet bounds for overlap for a HIT
-            if(doTheseRectanglesOverlap(playerBulletBounds, enemyBulletBounds)){
-                destroyBullet(playerBullets, i);
-                destroyBullet(enemyBullets, j);
+            if(doTheseRectanglesOverlap(theseBulletBounds, thoseBulletBounds)){
+                destroyBullet(theseBullets, i);
+                destroyBullet(thoseBullets, j);
                 j = -1; // breaks the j loop
             } // end if overlap
 
@@ -292,7 +312,7 @@ function collideBulletsWithFormation(whichBullets){
                     // destroy this alien by replacing it with an explosion type
                     alienGrid[cellIndex] = ALIEN_EXPLOSION;
                     // update alien count
-                    alienCounter = countAliens();
+                    alienCounter = countFormationAliens();
                     // pause formation motion briefly
                     // formationHoldCounter = Math.floor((ALIEN_GRID_COLS * ALIEN_GRID_ROWS)/6); // this doesn't quite work right
                     // destroy this bullet
@@ -315,7 +335,8 @@ function fireAllBullets(){
         fireButtonPressed = true;                                               ////////////////
     }                                                                           ////////////////
     fireHold++;                                                                 ////////////////
-    enemyFireCoolDownCounter--;                                                 ////////////////
+    formationFireCoolDownCounter--;                                             ////////////////
+    sliderFireCoolDownCounter--;                                                ////////////////
                                                                                 ////////////////
     spread = Math.floor(Math.random() * 700);                                   ////////////////
     // ------------------------ end temporary fire control code ----------------////////////////
@@ -327,10 +348,16 @@ function fireAllBullets(){
         fireButtonPressed = false; // temporary -------------------------------------------------------------------------------////////////////
     }
 
-    // fire enemy bullet
-    if (enemyFireCoolDownCounter < 0 && enemyBullets.length < MAX_ENEMY_BULLETS){
-        fireBullet(enemyBullets, enemyBulletStartX + spread, enemyBulletStartY, 0, ENEMY_BULLET_VELOCITY); // delete spread ////////////////
-        enemyFireCoolDownCounter = ENEMY_FIRE_COOL_DOWN; // temporary ------------------------------------------------------////////////////
+    // fire enemy formation bullet
+    if (formationFireCoolDownCounter < 0 && formationBullets.length < MAX_FORMATION_BULLETS){
+        fireBullet(formationBullets, formationBulletStartX + spread, formationBulletStartY, 0, ENEMY_BULLET_VELOCITY); // delete spread ////////////////
+        formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN; // temporary ------------------------------------------------------////////////////
+    }
+
+    // fire enemy slider bullet
+    if (sliderFireCoolDownCounter < 0 && sliderBullets.length < MAX_SLIDER_BULLETS){
+        fireBullet(sliderBullets, sliderBulletStartX + spread, sliderBulletStartY, 0, ENEMY_BULLET_VELOCITY); // delete spread ////////////////
+        sliderFireCoolDownCounter = SLIDER_FIRE_COOL_DOWN; // temporary ------------------------------------------------------////////////////
     }
 
 } // =========================================================================== end function fireAllBullets

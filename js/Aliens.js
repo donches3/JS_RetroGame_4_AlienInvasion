@@ -76,7 +76,7 @@ var isMovingRight = true;
 function loadFormation(whichFormation) {
     alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
     UpdateFormationBounds();
-    alienCounter = countAliens();
+    alienCounter = countFormationAliens();
     formationHoldCounter = Math.floor(alienCounter/2);
 } // =========================================================================== end function loadFormation
 
@@ -312,7 +312,7 @@ function getFormationIndexHere(x, y){
 
 } // =========================================================================== end function getFormationIndexHere
 
-function countAliens(){
+function countFormationAliens(){
     var count = 0;
 
     // count aliens in formation
@@ -322,11 +322,8 @@ function countAliens(){
         }
     }
 
-    // add sliders to count
-    count += sliders.length;
-
     return count;
-} // =========================================================================== end function countAliens
+} // =========================================================================== end function countFormationAliens
 
 function getAlienBounds(formationIndex){
     var alienTypeHere = alienGrid[formationIndex];
