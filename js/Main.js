@@ -29,6 +29,7 @@ function imageLoadingDoneSoStartGame() {
 
     loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
     loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
+    loadPlayer();
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 

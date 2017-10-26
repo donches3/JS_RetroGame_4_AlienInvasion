@@ -18,10 +18,10 @@ var allBlasts = [];
 
 var fireButtonPressed = false;
 
-var playerBulletStartX = 50;  // temporary hard-coded value                     ////////////////
-var playerBulletStartY = 630; // temporary hard-coded value                     ////////////////
-var spread; // temp variable to randomize firing positions                      ////////////////
-var fireHold = 6; // temporary counter                                          ////////////////
+// var playerBulletStartX = 50;  // temporary hard-coded value                     ////////////////
+// var playerBulletStartY = 630; // temporary hard-coded value                     ////////////////
+// var spread; // temp variable to randomize firing positions                      ////////////////
+// var fireHold = 6; // temporary counter                                          ////////////////
 
 const FORMATION_FIRE_COOL_DOWN = 8;
 var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
@@ -97,18 +97,7 @@ function incrementTheseBullets(whichBullets){
 
 function fireAllBullets(){
 
-    // ---------------------------- temporary fire control code ----------------////////////////
-    fireButtonPressed = false;                                                  ////////////////
-                                                                                ////////////////
-    // if (fireHold % 3 == 0){                                                     ////////////////
-    //     fireButtonPressed = true;                                               ////////////////
-    // }                                                                           ////////////////
-    // fireHold++;
-    fireButtonPressed = true;                                                                 ////////////////
-                                                                                ////////////////
-    spread = Math.floor(Math.random() * 700);                                   ////////////////
-    // ------------------------ end temporary fire control code ----------------////////////////
-
+    fireButtonPressed = true; // temporary                                      ////////////////
 
     playerFireControl();
 
@@ -116,16 +105,12 @@ function fireAllBullets(){
 
     sliderFireControl();
 
-
 } // =========================================================================== end function fireAllBullets
 
-function playerFireControl(){ // not done yet                                   ////////////////
+function playerFireControl(){
     // fire player bullet
     if (fireButtonPressed && playerBullets.length < MAX_PLAYER_BULLETS){
-        // fireBullet(playerBullets, playerBulletStartX, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// restore this line ////////////////
-        // fireBullet(playerBullets, 100 + spread, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// delete this line ////////////////
         fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);
-        fireButtonPressed = false; // temporary -------------------------------------------------------------------------------////////////////
     }
 } // =========================================================================== end function playerFireControl
 
@@ -431,6 +416,18 @@ function collideBulletsWithBunkers(whichBullets){
 function collideBulletsWithPlayer(whichBullets){ // not donw yet                ////////////////
 
     // ===== check collision with Player =====
+
+    // this loop must start at the end and increment backwards
+    // because the length of the array is changing while this loop is running
+    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+        if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, playerBounds)){
+
+            destroyBullet(whichBullets, i);
+
+            // destroy player                                                   ////////////////
+
+        }
+    }
 
 } // =========================================================================== end function collideBulletsWithPlayer
 
