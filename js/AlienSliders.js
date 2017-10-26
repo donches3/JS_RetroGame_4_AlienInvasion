@@ -7,8 +7,8 @@ const SLIDERS_BOTTOM = SLIDERS_Y + 12;
 const SLIDER_SPEED_SLOW = 10;
 const SLIDER_SPEED_MEDIUM = 15;
 const SLIDER_SPEED_FAST = 20;
-const SLIDER_COOL_DOWN = 30;
-var sliderCoolDownCounter = SLIDER_COOL_DOWN;
+const SLIDER_SPAWN_COOL_DOWN = 45;
+var sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
 var sliderSpawnsOnRight = true;
 var sliders = [];
 var sliderExplosions = [];
@@ -28,12 +28,12 @@ function spawnOccasionalSlider(){
 
     // occasionally spawn a slider
     // uses cool-down timer and maximun number of sliders
-    if (sliders.length < SLIDERS_MAXIMUM && sliderCoolDownCounter <= 0){
+    if (sliders.length < SLIDERS_MAXIMUM && sliderSpawnCoolDownCounter <= 0){
         spawnSlider(sliderSpawnsOnRight, ALIEN_SLIDER, SLIDER_SPEED_SLOW);
-        sliderCoolDownCounter = SLIDER_COOL_DOWN;
+        sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
         sliderSpawnsOnRight = !sliderSpawnsOnRight;
     }
-    sliderCoolDownCounter--;
+    sliderSpawnCoolDownCounter--;
 
 } // =========================================================================== end function spawnOccasionalSlider
 
@@ -56,22 +56,25 @@ function destroyOffScreenSliders(){
 
 function moveSliders(){
 
-    // increment slider positions
+    // increment slider positions and also slider coolDown timers
     for (var i = 0; i < sliders.length; i++){ // does not run if array is empty
         sliders[i].positionX += sliders[i].velocityX;
+        sliders[i].coolDown--;
     }
 
 } // =========================================================================== end function moveSliders
 
 function spawnSlider(spawnOnRight, sliderType, sliderSpeed){
 
-    var initialSlider = {positionX:0, velocityX:0, type:0, width:0};
+    var initialSlider = {positionX:0, velocityX:0, type:0, width:0, coolDown:0};
     var spawnOffset;
 
     sliders.push(initialSlider); // adds slider object to end of array
 
     sliders[sliders.length - 1].type = sliderType;
     sliders[sliders.length - 1].width = alienPics[sliderType].width;
+    sliders[sliders.length - 1].coolDown = Math.floor(SLIDER_FIRE_COOL_DOWN/2);
+
     spawnOffset = Math.floor((sliders[sliders.length - 1].width)/2);
 
     if (spawnOnRight){ // just off right side of screen with a negative velocity

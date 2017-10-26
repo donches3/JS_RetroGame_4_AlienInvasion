@@ -3,7 +3,7 @@ const BULLET_HEIGHT = 15;
 
 const MAX_PLAYER_BULLETS = 1;
 const MAX_FORMATION_BULLETS = 2;
-const MAX_SLIDER_BULLETS = 12;
+const MAX_SLIDER_BULLETS = 12; // I may not use this in the final fire control code
 
 const PLAYER_BULLET_VELOCITY = -20; // pixels per frame, also, negative value goes up
 const ENEMY_BULLET_VELOCITY = 10; // for both slider and formation bullets
@@ -29,8 +29,7 @@ var spread; // temp variable to randomize firing positions ---------------------
 var fireHold = 6; // temorary counter ------------------------------------------////////////////
 const FORMATION_FIRE_COOL_DOWN = 6;
 var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
-const SLIDER_FIRE_COOL_DOWN = 7;
-var sliderFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
+const SLIDER_FIRE_COOL_DOWN = 30;
 
 // ============================================================================= end vars
 
@@ -148,6 +147,9 @@ function collideBulletsWithGround(whichBullets){
     for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
         if (whichBullets[i].positionY >= canvas.height - GROUND_LEVEL){
 
+            // move bullet to ground level to prevent tunnelling
+            whichBullets[i].positionY = canvas.height - GROUND_LEVEL;
+
             destroyBullet(whichBullets, i);
 
         }
@@ -178,11 +180,8 @@ function collideBulletsWithSliders(whichBullets){
                     j = -1; // breaks the j loop
 
                 } // end if slider bounds
-
             } // end for j (slider index)
-
         } // end if slider domain
-
     } // end for i (bullet index)
 
 } // =========================================================================== end function collideBulletsWithSliders
@@ -262,11 +261,8 @@ function collideBulletsWithBunkers(whichBullets){
                     } // end if block
 
                 } // end if bunker bounds
-
             } // end for j (bunker index)
-
         } // end if bunker domain
-
     } // end for i (bullet index)
 
 } // =========================================================================== end function collideBulletsWithBunkers
@@ -336,7 +332,6 @@ function fireAllBullets(){
     }                                                                           ////////////////
     fireHold++;                                                                 ////////////////
     formationFireCoolDownCounter--;                                             ////////////////
-    sliderFireCoolDownCounter--;                                                ////////////////
                                                                                 ////////////////
     spread = Math.floor(Math.random() * 700);                                   ////////////////
     // ------------------------ end temporary fire control code ----------------////////////////
@@ -354,16 +349,17 @@ function fireAllBullets(){
         formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN; // temporary ------------------------------------------------------////////////////
     }
 
-    // fire enemy slider bullet
-    if (sliderFireCoolDownCounter < 0 && sliderBullets.length < MAX_SLIDER_BULLETS){
-        fireBullet(sliderBullets, sliderBulletStartX + spread, sliderBulletStartY, 0, ENEMY_BULLET_VELOCITY); // delete spread ////////////////
-        sliderFireCoolDownCounter = SLIDER_FIRE_COOL_DOWN; // temporary ------------------------------------------------------////////////////
+    // loop through sliders and fire slider bullets if appropriate
+    for (var i = 0; i < sliders.length; i++){
+        if (sliders[i].coolDown < 0 && sliderBullets.length < MAX_SLIDER_BULLETS){
+            fireBullet(sliderBullets, sliders[i].positionX, SLIDERS_BOTTOM, 0, ENEMY_BULLET_VELOCITY);
+            sliders[i].coolDown = SLIDER_FIRE_COOL_DOWN;
+        }
     }
 
 } // =========================================================================== end function fireAllBullets
 
 function fireBullet(whichBullets, firePosX, firePosY, bulletVelocityX, bulletVelocityY){
-
     var initialBullet = {positionX: 0, positionY: 0, velocityX: 0, velocityY: 0};
 
     whichBullets.push(initialBullet); // adds bullet object to end of array
@@ -378,13 +374,11 @@ function destroyBullet(whichBullets, index){
     // create new blast object at current bullet position
     createBlast(whichBullets[index].positionX, whichBullets[index].positionY);
     // destroy this bullet without leaving gap in array
-    // whichBullets.splice(index, 1);
     destroyElementOfArray(whichBullets, index);
 
 } // =========================================================================== end function destroyBullet
 
 function createBlast(blastPosX, blastPosY){
-
     var initialBlast = {positionX: 0, positionY: 0, radius: 0};
 
     allBlasts.push(initialBlast); // adds blast object to end of array
@@ -397,6 +391,7 @@ function createBlast(blastPosX, blastPosY){
 function incrementBlasts(){
 
     // increment (shrink) all blasts and destroy the ones with minimum radius
+
     // this loop must start at the end and increment backwards
     // because the length of the array is changing while this loop is running
     for (var i = allBlasts.length - 1; i >= 0; i--){
