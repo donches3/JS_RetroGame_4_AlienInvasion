@@ -100,10 +100,11 @@ function fireAllBullets(){
     // ---------------------------- temporary fire control code ----------------////////////////
     fireButtonPressed = false;                                                  ////////////////
                                                                                 ////////////////
-    if (fireHold % 3 == 0){                                                     ////////////////
-        fireButtonPressed = true;                                               ////////////////
-    }                                                                           ////////////////
-    fireHold++;                                                                 ////////////////
+    // if (fireHold % 3 == 0){                                                     ////////////////
+    //     fireButtonPressed = true;                                               ////////////////
+    // }                                                                           ////////////////
+    // fireHold++;
+    fireButtonPressed = true;                                                                 ////////////////
                                                                                 ////////////////
     spread = Math.floor(Math.random() * 700);                                   ////////////////
     // ------------------------ end temporary fire control code ----------------////////////////
@@ -122,7 +123,8 @@ function playerFireControl(){ // not done yet                                   
     // fire player bullet
     if (fireButtonPressed && playerBullets.length < MAX_PLAYER_BULLETS){
         // fireBullet(playerBullets, playerBulletStartX, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// restore this line ////////////////
-        fireBullet(playerBullets, 100 + spread, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// delete this line ////////////////
+        // fireBullet(playerBullets, 100 + spread, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// delete this line ////////////////
+        fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);
         fireButtonPressed = false; // temporary -------------------------------------------------------------------------------////////////////
     }
 } // =========================================================================== end function playerFireControl
