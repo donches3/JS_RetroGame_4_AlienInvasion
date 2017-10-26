@@ -18,15 +18,11 @@ var allBlasts = [];
 
 var fireButtonPressed = false;
 
-var playerBulletStartX = 50; // temporary hard-coded values --------------------////////////////
-var playerBulletStartY = 630;
-var formationBulletStartX = 50; // temporary hard-coded values ---------------------////////////////
-var formationBulletStartY = 300;
-var sliderBulletStartX = 50; // temporary hard-coded values ---------------------////////////////
-var sliderBulletStartY = SLIDERS_BOTTOM;
-var spread; // temp variable to randomize firing positions ---------------------////////////////
+var playerBulletStartX = 50;  // temporary hard-coded value                     ////////////////
+var playerBulletStartY = 630; // temporary hard-coded value                     ////////////////
+var spread; // temp variable to randomize firing positions                      ////////////////
+var fireHold = 6; // temporary counter                                          ////////////////
 
-var fireHold = 6; // temorary counter ------------------------------------------////////////////
 const FORMATION_FIRE_COOL_DOWN = 8;
 var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
 const SLIDER_FIRE_COOL_DOWN = 30;
@@ -48,6 +44,17 @@ function manageBullets(){
     fireAllBullets();
 
 } // =========================================================================== end function manageBullets
+
+function moveBullets(){
+
+    // increment all player bullets
+    incrementTheseBullets(playerBullets);
+    // increment all enemy formation bullets
+    incrementTheseBullets(formationBullets);
+    // increment all enemy slider bullets
+    incrementTheseBullets(sliderBullets);
+
+} // =========================================================================== end function moveBullets
 
 function drawBullet(x, y){
     colorRectCentered(x, y, BULLET_WIDTH, BULLET_HEIGHT, 'white');
@@ -88,17 +95,6 @@ function incrementTheseBullets(whichBullets){
         }
 } // =========================================================================== end function incrementTheseBullets
 
-function moveBullets(){
-
-    // increment all player bullets
-    incrementTheseBullets(playerBullets);
-    // increment all enemy formation bullets
-    incrementTheseBullets(formationBullets);
-    // increment all enemy slider bullets
-    incrementTheseBullets(sliderBullets);
-
-} // =========================================================================== end function moveBullets
-
 function fireAllBullets(){
 
     // ---------------------------- temporary fire control code ----------------////////////////
@@ -122,7 +118,7 @@ function fireAllBullets(){
 
 } // =========================================================================== end function fireAllBullets
 
-function playerFireControl(){
+function playerFireControl(){ // not done yet                                   ////////////////
     // fire player bullet
     if (fireButtonPressed && playerBullets.length < MAX_PLAYER_BULLETS){
         // fireBullet(playerBullets, playerBulletStartX, playerBulletStartY, 0, PLAYER_BULLET_VELOCITY);// restore this line ////////////////
@@ -430,7 +426,7 @@ function collideBulletsWithBunkers(whichBullets){
 
 } // =========================================================================== end function collideBulletsWithBunkers
 
-function collideBulletsWithPlayer(whichBullets){
+function collideBulletsWithPlayer(whichBullets){ // not donw yet                ////////////////
 
     // ===== check collision with Player =====
 
@@ -473,7 +469,12 @@ function collideBulletsWithFormation(whichBullets){
                     // update alien count
                     alienCounter = countFormationAliens();
                     // pause formation motion briefly
-                    // formationHoldCounter = Math.floor((ALIEN_GRID_COLS * ALIEN_GRID_ROWS)/6); // this doesn't quite work right
+                    if (!formationHoldShield){
+                        if (formationHoldCounter < FORMATION_HIT_PAUSE){
+                            formationHoldCounter = FORMATION_HIT_PAUSE;
+                        }
+                        formationHoldShield = true;
+                    }
                     // destroy this bullet
                     destroyBullet(whichBullets, i);
 

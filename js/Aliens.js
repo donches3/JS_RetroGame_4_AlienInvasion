@@ -68,6 +68,8 @@ var alienCounter = ALIEN_GRID_COLS * ALIEN_GRID_ROWS; // this value gets updated
 // number of frames between formation increments
 // Hold counter is based on alien count.  fewer aliens means faster increments.
 var formationHoldCounter = Math.floor(alienCounter/2); // this value gets updated dynamically
+var formationHoldShield = false; // prevents hold counter from being reset too often.
+const FORMATION_HIT_PAUSE = 15;
 
 var isMovingRight = true;
 
@@ -90,6 +92,7 @@ function moveFormation(){
         removeFormationExplosions();
         collideFormationWithBunkers();
         formationHoldCounter = Math.floor(alienCounter/2); // reset hold counter
+        formationHoldShield = false;
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
         // detect ground impact                                                 NOTE game over condition
