@@ -287,21 +287,20 @@ function getFormationIndexHere(x, y){
 
     // find column
     col = Math.floor((x - formationOriginX)/ALIEN_CELL_WIDTH);
-
-    if(col >= ALIEN_GRID_COLS){ // correct edge error
-        col--;
-    }
-    if(col < 0){
-        col++;
-    }
-
     // find row
     row = Math.floor((y - formationOriginY)/ALIEN_CELL_HEIGHT);
 
-    if(row >= ALIEN_GRID_ROWS){ // correct edge error
+    // edge error correction
+    if(col >= ALIEN_GRID_COLS){ // correct edge error right side
+        col--;
+    }
+    if(col < 0){ // correct edge error left side
+        col++;
+    }
+    if(row >= ALIEN_GRID_ROWS){ // correct edge error bottom
         row--;
     }
-    if(row < 0){
+    if(row < 0){ // correct edge error top
         row++;
     }
 
