@@ -67,8 +67,6 @@ function incrementTheseBullets(whichBullets){
 
 function fireAllBullets(){
 
-    // keyHeld_Fire = true; // temporary                                      ////////////////
-
     playerFireControl();
     formationFireControl();
     sliderFireControl();
@@ -95,10 +93,13 @@ function destroyBullet(whichBullets, index){
 } // =========================================================================== end function destroyBullet
 
 function playerFireControl(){
-    // fire player bullet
-    if (keyHeld_Fire && playerBullets.length < MAX_PLAYER_BULLETS){
-        fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);
+    
+    if (playerActive){
+        if (keyHeld_Fire && playerBullets.length < MAX_PLAYER_BULLETS){
+            fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);
+        }
     }
+
 } // =========================================================================== end function playerFireControl
 
 function sliderFireControl(){

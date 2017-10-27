@@ -17,8 +17,8 @@ var keyHeld_MoveLeft  = false;
 
 function setupInput() {
 
-        document.addEventListener('keydown', keyPressed);
-        document.addEventListener('keyup', keyReleased);
+        document.addEventListener('keydown', keyPressed); // calls function keyPressed when triggered
+        document.addEventListener('keyup', keyReleased); // calls function keyReleased when triggered
 
         controlKey_Fire      = KEY_CODE_SPACE_BAR;
         controlKey_MoveRight = KEY_CODE_RIGHT_ARROW;

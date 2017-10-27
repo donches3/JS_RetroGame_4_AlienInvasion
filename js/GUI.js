@@ -37,25 +37,16 @@ function drawGUI() {
     //
     testLabel2 = 'Move Left   ';
     testValue2 = keyHeld_MoveLeft;
-
     //
     testLabel3 = 'Fire        ';
     testValue3 = keyHeld_Fire;
 
-    //
-    // testLabel4 = 'X of first bullet:  ';
-    // if (playerBullets.length > 0){
-    //     testValue4 = playerBullets[0].positionX;
-    // } else {testValue4 = 0;}
-    //
-    // testLabel5 = 'X of last bullet:   ';
-    // if (playerBullets.length > 0){
-    //     testValue5 = playerBullets[playerBullets.length - 1].positionX;
-    // } else {testValue5 = 0;}
-    //
-    colorText(testLabel1 + testValue1, 100, 50,  'white');
-    colorText(testLabel2 + testValue2, 100, 75,  'white');
-    colorText(testLabel3 + testValue3, 100, 100, 'white');
+
+
+
+    // colorText(testLabel1 + testValue1, 100, 50,  'white');
+    // colorText(testLabel2 + testValue2, 100, 75,  'white');
+    // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
     // colorText(testLabel5 + testValue5, 100, 150, 'white');
 

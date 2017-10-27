@@ -174,19 +174,20 @@ function collideBulletsWithBunkers(whichBullets){
 
 } // =========================================================================== end function collideBulletsWithBunkers
 
-function collideBulletsWithPlayer(whichBullets){ // not donw yet                ////////////////
+function collideBulletsWithPlayer(whichBullets){
 
     // ===== check collision with Player =====
 
-    // this loop must start at the end and increment backwards
-    // because the length of the array is changing while this loop is running
-    for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
-        if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, playerBounds)){
+    if (!playerDestroyed){
+        // this loop must start at the end and increment backwards
+        // because the length of the array is changing while this loop is running
+        for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty
+            if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, playerBounds)){
 
-            destroyBullet(whichBullets, i);
+                destroyBullet(whichBullets, i);
+                destroyPlayer();
 
-            // destroy player                                                   ////////////////
-
+            }
         }
     }
 

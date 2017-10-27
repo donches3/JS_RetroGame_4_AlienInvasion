@@ -21,8 +21,6 @@ window.onload = function() {
 function imageLoadingDoneSoStartGame() {
     var framesPerSecond = 30;
 
-    colorText("Game Started", canvas.width/2, canvas.height/2 + 40, 'white');  //  ////////////////
-
     setInterval(updateAll, 1000/framesPerSecond);
 
     setupInput();
@@ -46,7 +44,7 @@ function moveAll() {
     manageSliders();
     managePlayer();
     incrementBlasts();
-    
+
     manageBullets(); // bullets should be the last thing moved
 } // =========================================================================== end function moveAll
 
