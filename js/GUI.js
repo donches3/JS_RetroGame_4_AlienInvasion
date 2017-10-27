@@ -32,15 +32,15 @@ var testValue5 = 909;
 
 function drawGUI() {
 
-    testLabel1 = 'number of slider bullets:  ';
-    testValue1 = sliderBullets.length;
+    testLabel1 = 'Move Right  ';
+    testValue1 = keyHeld_MoveRight;
     //
-    testLabel2 = 'number of sliders:  ';
-    testValue2 = sliders.length;
+    testLabel2 = 'Move Left   ';
+    testValue2 = keyHeld_MoveLeft;
 
     //
-    testLabel3 = 'SCORE:  ';
-    testValue3 = gameScore;
+    testLabel3 = 'Fire        ';
+    testValue3 = keyHeld_Fire;
 
     //
     // testLabel4 = 'X of first bullet:  ';

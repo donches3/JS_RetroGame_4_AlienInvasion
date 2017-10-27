@@ -12,8 +12,6 @@ var playerBullets = [];
 var formationBullets = [];
 var sliderBullets = [];
 
-var fireButtonPressed = false;
-
 const FORMATION_FIRE_COOL_DOWN = 8;
 var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
 const SLIDER_FIRE_COOL_DOWN = 30;
@@ -33,11 +31,8 @@ function manageBullets(){
 
 function moveBullets(){
 
-    // increment all player bullets
     incrementTheseBullets(playerBullets);
-    // increment all enemy formation bullets
     incrementTheseBullets(formationBullets);
-    // increment all enemy slider bullets
     incrementTheseBullets(sliderBullets);
 
 } // =========================================================================== end function moveBullets
@@ -56,11 +51,8 @@ function drawTheseBullets(whichBullets){
 
 function drawBullets(){
 
-    // draw all player bullets
     drawTheseBullets(playerBullets);
-    // draw all enemy formation bullets
     drawTheseBullets(formationBullets);
-    // draw all enemy slider bullets
     drawTheseBullets(sliderBullets);
 
 } // =========================================================================== end function drawBullets
@@ -75,12 +67,10 @@ function incrementTheseBullets(whichBullets){
 
 function fireAllBullets(){
 
-    fireButtonPressed = true; // temporary                                      ////////////////
+    // keyHeld_Fire = true; // temporary                                      ////////////////
 
     playerFireControl();
-
     formationFireControl();
-
     sliderFireControl();
 
 } // =========================================================================== end function fireAllBullets
@@ -106,7 +96,7 @@ function destroyBullet(whichBullets, index){
 
 function playerFireControl(){
     // fire player bullet
-    if (fireButtonPressed && playerBullets.length < MAX_PLAYER_BULLETS){
+    if (keyHeld_Fire && playerBullets.length < MAX_PLAYER_BULLETS){
         fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);
     }
 } // =========================================================================== end function playerFireControl

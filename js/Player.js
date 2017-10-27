@@ -10,8 +10,6 @@ const PLAYER_EDGE_LIMIT = 50;
 
 var playerX = 0;
 var playerBounds = {top:0, bottom:0, left:0, right:0};
-var playerMovingRight = true; // temporary                                      ////////////////
-
 
 // ============================================================================= end vars
 
@@ -41,12 +39,11 @@ function updatePlayerBounds(){
 function movePlayer(){
 
     // temporary player movement code
-    if (playerMovingRight && playerBounds.right < canvas.width - PLAYER_EDGE_LIMIT){ // moving right and not at right edge
+    if (keyHeld_MoveRight && playerBounds.right < canvas.width - PLAYER_EDGE_LIMIT){ // moving right and not at right edge
         playerX += PLAYER_SPEED;
-    } else if (!playerMovingRight && playerBounds.left > PLAYER_EDGE_LIMIT){ // moving left and not at left edge
+    }
+    if (keyHeld_MoveLeft && playerBounds.left > PLAYER_EDGE_LIMIT){ // moving left and not at left edge
         playerX -= PLAYER_SPEED;
-    } else { // at an edge
-        playerMovingRight = !playerMovingRight;
     }
 
 } // =========================================================================== end function movePlayer

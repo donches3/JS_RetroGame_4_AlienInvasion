@@ -1,57 +1,40 @@
 
-// Arrow key codes
-const KEY_UP_ARROW    = 38;
-const KEY_RIGHT_ARROW = 39;
-const KEY_DOWN_ARROW  = 40;
-const KEY_LEFT_ARROW  = 37;
 
-// WASD key codes
-// const KEY_W = 87; // up
-// const KEY_D = 68; // right
-// const KEY_S = 83; // down
-// const KEY_A = 65; // left
+const KEY_CODE_RIGHT_ARROW = 39;
+const KEY_CODE_LEFT_ARROW  = 37;
+const KEY_CODE_SPACE_BAR   = 32;
 
-var mouseX = 0;
-var mouseY = 0;
+var controlKey_Fire;
+var controlKey_MoveRight;
+var controlKey_MoveLeft;
+
+var keyHeld_Fire      = false;
+var keyHeld_MoveRight = false;
+var keyHeld_MoveLeft  = false;
+
+
 // ============================================================================= end vars
 
 function setupInput() {
-        canvas.addEventListener('mousemove', updateMousePos);
 
         document.addEventListener('keydown', keyPressed);
         document.addEventListener('keyup', keyReleased);
 
-        // I may have deleted a few input setup lines here prematurely.  Copy from Adventure game ////////////////
-        
+        controlKey_Fire      = KEY_CODE_SPACE_BAR;
+        controlKey_MoveRight = KEY_CODE_RIGHT_ARROW;
+        controlKey_MoveLeft  = KEY_CODE_LEFT_ARROW;
+
 } // =========================================================================== end function setupInput
 
-function updateMousePos(evt) {
-    var rect = canvas.getBoundingClientRect();
-    var root = document.documentElement;
-
-    mouseX = evt.clientX - rect.left - root.scrollLeft;
-    mouseY = evt.clientY - rect.top  - root.scrollTop;
-
-    // -------------------------------------------------------- temporary cheat ////////////////
-    // warriorX = mouseX;
-    // warriorY = mouseY;
-    // warriorSpeedX = 4;
-    // warriorSpeedY = -4;
-
-} // =========================================================================== end function updateMousePos
-
-function keySet(keyEvent, whichWarrior, setTo) {
-    if(keyEvent.keyCode == whichWarrior.controlKeyLeft) { // move left
-        whichWarrior.keyHeld_MoveWest = setTo;
+function keySet(keyEvent, setTo) {
+    if(keyEvent.keyCode == controlKey_Fire) { // move fire
+        keyHeld_Fire = setTo;
     }
-    if(keyEvent.keyCode == whichWarrior.controlKeyRight) { // move right
-        whichWarrior.keyHeld_MoveEast = setTo;
+    if(keyEvent.keyCode == controlKey_MoveRight) { // move right
+        keyHeld_MoveRight = setTo;
     }
-    if(keyEvent.keyCode == whichWarrior.controlKeyUp) { // move up
-        whichWarrior.keyHeld_MoveNorth = setTo;
-    }
-    if(keyEvent.keyCode == whichWarrior.controlKeyDown) { // move down
-        whichWarrior.keyHeld_MoveSouth = setTo;
+    if(keyEvent.keyCode == controlKey_MoveLeft) { // move left
+        keyHeld_MoveLeft = setTo;
     }
 
 } // =========================================================================== end function keySet
@@ -59,7 +42,7 @@ function keySet(keyEvent, whichWarrior, setTo) {
 function keyPressed(evt) {
     // console.log("Key pressed: " + evt.keyCode);
 
-    keySet(evt, blueWarrior, true);
+    keySet(evt, true);
 
     // prevents arrow keys from scrolling screen
     evt.preventDefault();
@@ -69,5 +52,5 @@ function keyPressed(evt) {
 function keyReleased(evt) {
     // console.log("Key released: " + evt.keyCode);
 
-    keySet(evt, blueWarrior, false);
+    keySet(evt, false);
 } // =========================================================================== end function keyReleased
