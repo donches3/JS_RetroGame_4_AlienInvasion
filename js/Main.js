@@ -45,7 +45,8 @@ function moveAll() {
     moveFormation();
     manageSliders();
     managePlayer();
-
+    incrementBlasts();
+    
     manageBullets(); // bullets should be the last thing moved
 } // =========================================================================== end function moveAll
 
@@ -56,6 +57,7 @@ function drawAll() {
     drawSliders();
     drawPlayer();
     drawBullets();
+    drawBlasts();
     // blueWarrior.draw(); //  no longer needed --------------------------------////////////////
     drawGUI();
 } // =========================================================================== end function drawAll
