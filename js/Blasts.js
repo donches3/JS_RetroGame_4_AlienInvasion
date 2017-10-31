@@ -2,45 +2,46 @@
 const BLAST_RADIUS = 10;
 const BLAST_RADIUS_MINIMUM = 2;
 
-var allBlasts = [];
+var bulletBlasts = [];
+var playerBlasts = [];
 
 // ============================================================================= end vars
 
-function drawBlasts(){
+function drawTheseBlasts(whichBlasts){
 
-    // draw all blasts
-    for (var i = 0; i < allBlasts.length; i++){ // does not run if array is empty
-        drawThisBlast(i);
+    // draw all blasts in this array
+    for (var i = 0; i < whichBlasts.length; i++){ // does not run if array is empty
+        drawThisBlast(whichBlasts, i);
     }
 
-} // =========================================================================== end function drawBlasts
+} // =========================================================================== end function drawTheseBlasts
 
-function drawThisBlast(index){
-    colorCircle(allBlasts[index].positionX, allBlasts[index].positionY, allBlasts[index].radius, 'white');
+function drawThisBlast(whichBlasts, index){
+    colorCircle(whichBlasts[index].positionX, whichBlasts[index].positionY, whichBlasts[index].radius, 'white');
 } // =========================================================================== end function drawThisBlast
 
-function createBlast(blastPosX, blastPosY){
+function createBlast(whichBlasts, blastPosX, blastPosY){
     var initialBlast = {positionX: 0, positionY: 0, radius: 0};
 
-    allBlasts.push(initialBlast); // adds blast object to end of array
-    allBlasts[allBlasts.length - 1].positionX = blastPosX;
-    allBlasts[allBlasts.length - 1].positionY = blastPosY;
-    allBlasts[allBlasts.length - 1].radius = BLAST_RADIUS;
+    whichBlasts.push(initialBlast); // adds blast object to end of array
+    whichBlasts[whichBlasts.length - 1].positionX = blastPosX;
+    whichBlasts[whichBlasts.length - 1].positionY = blastPosY;
+    whichBlasts[whichBlasts.length - 1].radius = BLAST_RADIUS;
 
 } // =========================================================================== end function createBlast
 
-function incrementBlasts(){
+function incrementTheseBlasts(whichBlasts){
 
     // increment (shrink) all blasts and destroy the ones with minimum radius
 
     // this loop must start at the end and increment backwards
     // because the length of the array is changing while this loop is running
-    for (var i = allBlasts.length - 1; i >= 0; i--){
-        allBlasts[i].radius -= 1;
-        if (allBlasts[i].radius <= BLAST_RADIUS_MINIMUM){
+    for (var i = whichBlasts.length - 1; i >= 0; i--){
+        whichBlasts[i].radius -= 1;
+        if (whichBlasts[i].radius <= BLAST_RADIUS_MINIMUM){
             // destroy this blast without leaving gap in array
-            destroyElementOfArray(allBlasts, i);
+            destroyElementOfArray(whichBlasts, i);
         }
     }
 
-} // =========================================================================== end function incrementBlasts
+} // =========================================================================== end function incrementTheseBlasts

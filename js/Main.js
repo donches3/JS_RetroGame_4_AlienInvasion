@@ -1,9 +1,7 @@
 
 var canvas, canvasContext;
 
-var gameScore = 0;
 
-var gameOver = false;
 // ============================================================================= end vars
 
 window.onload = function() {
@@ -43,7 +41,8 @@ function moveAll() {
     moveFormation();
     manageSliders();
     managePlayer();
-    incrementBlasts();
+    incrementTheseBlasts(bulletBlasts);
+    incrementTheseBlasts(playerBlasts);
 
     manageBullets(); // bullets should be the last thing moved
 } // =========================================================================== end function moveAll
@@ -55,7 +54,8 @@ function drawAll() {
     drawSliders();
     drawPlayer();
     drawBullets();
-    drawBlasts();
+    drawTheseBlasts(bulletBlasts);
+    drawTheseBlasts(playerBlasts);
     // blueWarrior.draw(); //  no longer needed --------------------------------////////////////
     drawGUI();
 } // =========================================================================== end function drawAll

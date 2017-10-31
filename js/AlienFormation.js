@@ -5,8 +5,9 @@ const ALIEN_GRID_ROWS = 5;
 
 const FORMATION_START_X = 96;
 const FORMATION_START_Y = 192;
-const FORMATION_INCREMENT_X = 12;
+const FORMATION_INCREMENT_X = 8;
 const FORMATION_INCREMENT_Y = 24;
+const FORMATION_EDGE_LIMIT = 40;
 
 var formationOriginX = FORMATION_START_X;
 var formationOriginY = FORMATION_START_Y;
@@ -261,10 +262,10 @@ function UpdateFormationBounds(){
 
 function incrementFormation(){
 
-    if (isMovingRight && formationBounds.right <= canvas.width){ // movine right and not at right edge
+    if (isMovingRight && formationBounds.right <= canvas.width - FORMATION_EDGE_LIMIT){ // movine right and not at right edge
         // increment right
         formationOriginX+= FORMATION_INCREMENT_X;
-    } else if (!isMovingRight && formationBounds.left >= 0){ // moving left and not at left edge
+    } else if (!isMovingRight && formationBounds.left >= FORMATION_EDGE_LIMIT){ // moving left and not at left edge
         // increment left
         formationOriginX-= FORMATION_INCREMENT_X;
     } else { // at left or right edge

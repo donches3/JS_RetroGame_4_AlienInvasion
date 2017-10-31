@@ -85,15 +85,15 @@ function fireBullet(whichBullets, firePosX, firePosY, bulletVelocityX, bulletVel
 } // =========================================================================== end function fireBullet
 
 function destroyBullet(whichBullets, index){
-    // create new blast object at current bullet position
-    createBlast(whichBullets[index].positionX, whichBullets[index].positionY);
+    // create new bullet blast object at current bullet position
+    createBlast(bulletBlasts, whichBullets[index].positionX, whichBullets[index].positionY);
     // destroy this bullet without leaving gap in array
     destroyElementOfArray(whichBullets, index);
 
 } // =========================================================================== end function destroyBullet
 
 function playerFireControl(){
-    
+
     if (playerActive){
         if (keyHeld_Fire && playerBullets.length < MAX_PLAYER_BULLETS){
             fireBullet(playerBullets, playerX, PLAYER_TOP, 0, PLAYER_BULLET_VELOCITY);

@@ -6,23 +6,29 @@ const PLAYER_WIDTH  = 52;
 const PLAYER_TOP    = PLAYER_Y - 12;
 const PLAYER_BOTTOM = PLAYER_Y + 12;
 const PLAYER_SPEED = 5;
-const PLAYER_EDGE_LIMIT = 50;
+const PLAYER_EDGE_LIMIT = 40;
 
 var playerX = 0;
 var playerBounds = {top:0, bottom:0, left:0, right:0};
 
-var playerActive = true;
-var playerDestroyed = false;
+var playerExplosionCounter;
+var playerExplosionActive = false;
+var playerExplosionBounds;
+
+
 
 // ============================================================================= end vars
 
 function managePlayer(){
 
-    movePlayer();
-    if (playerExplosionActive){
-        incrementPlayerExplosion()
+    if (playerActive){
+        movePlayer();
+        updatePlayerBounds();
     }
-    updatePlayerBounds();
+    if (playerExplosionActive){
+        addToPlayerExplosion()
+    }
+
 
 } // =========================================================================== end function managePlayer
 
@@ -72,25 +78,21 @@ function destroyPlayer(){
 
 } // =========================================================================== end function destroyPlayer
 
-var playerExplosionCounter;
-var playerExplosionActive = false;
-var playerExplosionBounds;
-
 function startPlayerExplosion(){
 
     playerExplosionActive = true;
-    playerExplosionCounter = 60;
+    playerExplosionCounter = 30;
     playerExplosionBounds = playerBounds;
     playerBounds = {top:0, bottom:0, left:0, right:0};
 
 } // =========================================================================== end function startPlayerExplosion
 
-function incrementPlayerExplosion(){
+function addToPlayerExplosion(){
 
     var randomBlastPosX = (Math.random() * (playerExplosionBounds.right - playerExplosionBounds.left)) + playerExplosionBounds.left;
     var randomBlastPosY = (Math.random() * (playerExplosionBounds.bottom - playerExplosionBounds.top)) + playerExplosionBounds.top;
 
-    createBlast(randomBlastPosX, randomBlastPosY);
+    createBlast(playerBlasts, randomBlastPosX, randomBlastPosY);
 
     playerExplosionCounter--;
 
@@ -98,4 +100,4 @@ function incrementPlayerExplosion(){
         playerExplosionActive = false;
     }
 
-} // =========================================================================== end function playerExplosion
+} // =========================================================================== end function addToPlayerExplosion
