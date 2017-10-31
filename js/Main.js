@@ -30,32 +30,11 @@ function imageLoadingDoneSoStartGame() {
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 
 function updateAll() {
-    if (!gameOver){
-        moveAll();
+
+    if(playScreenActive){
+        managePlayScreen();
     }
-    drawAll();
-} // =========================================================================== end function updateAll
 
-function moveAll() {
-    // blueWarrior.move(); //  no longer needed --------------------------------////////////////
-    moveFormation();
-    manageSliders();
-    managePlayer();
-    incrementTheseBlasts(bulletBlasts);
-    incrementTheseBlasts(playerBlasts);
-
-    manageBullets(); // bullets should be the last thing moved
-} // =========================================================================== end function moveAll
-
-function drawAll() {
-    drawWorld();
-    drawBunkers();
-    drawFormation();
-    drawSliders();
-    drawPlayer();
-    drawBullets();
-    drawTheseBlasts(bulletBlasts);
-    drawTheseBlasts(playerBlasts);
-    // blueWarrior.draw(); //  no longer needed --------------------------------////////////////
     drawGUI();
-} // =========================================================================== end function drawAll
+
+} // =========================================================================== end function updateAll

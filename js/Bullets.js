@@ -25,7 +25,9 @@ function manageBullets(){
     // check and resolve all bullet collisions
     collideBullets();
     // fire bullets (both player and enemy)
-    fireAllBullets();
+    if (!gamePaused){
+        fireAllBullets();
+    }
 
 } // =========================================================================== end function manageBullets
 

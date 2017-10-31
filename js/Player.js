@@ -25,9 +25,7 @@ function managePlayer(){
         movePlayer();
         updatePlayerBounds();
     }
-    if (playerExplosionActive){
-        addToPlayerExplosion()
-    }
+
 
 
 } // =========================================================================== end function managePlayer
@@ -38,7 +36,7 @@ function loadPlayer(){
     updatePlayerBounds();
     playerActive = true;
     playerDestroyed = false;
-
+    livesLeftPlayer1 -= 1;
 
 } // =========================================================================== end function loadPlayer
 
@@ -74,6 +72,7 @@ function destroyPlayer(){
 
     playerActive = false;
     playerDestroyed = true;
+    gamePaused = true;
     startPlayerExplosion();
 
 } // =========================================================================== end function destroyPlayer

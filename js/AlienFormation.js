@@ -96,9 +96,9 @@ function moveFormation(){
         formationHoldShield = false;
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
-        // detect ground impact                                                 NOTE game over condition
+        // detect ground impact                                                 NOTE changes game state
         if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
-            gameOver = true;
+            destroyPlayer();
         }
     }
 

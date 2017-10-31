@@ -50,7 +50,10 @@ function drawGUI() {
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
     // colorText(testLabel5 + testValue5, 100, 150, 'white');
 
+    if (gameOver){
+        colorText('GAME OVER', 400, 150, 'white');
 
+    }
 
 
     // drawKeyBar(blueWarrior.keysHeld, KEYS_OFFSET_X, KEYS_OFFSET_Y);
