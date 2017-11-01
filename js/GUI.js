@@ -1,6 +1,6 @@
 
-const KEYS_OFFSET_X = 1;
-const KEYS_OFFSET_Y = 0;
+// const KEYS_OFFSET_X = 1;
+// const KEYS_OFFSET_Y = 0;
 
 const LIFE_BAR_ORIGIN_X = 50;
 const LIFE_BAR_ORIGIN_Y = 700;
@@ -8,23 +8,34 @@ const LIFE_BAR_ICON_OFFSET_X = 180;
 const LIFE_BAR_ICON_OFFSET_Y = -20;
 const LIFE_BAR_ICON_PITCH = 64;
 
-var drawingLifeBar = true;
+const CENTER_SCREEN_X = 450;
+const SCORE_X_LEFT  = CENTER_SCREEN_X - 250;
+const SCORE_X_RIGHT = CENTER_SCREEN_X + 250;
+const SCORE_LINE_Y_1 = 50;
+const SCORE_LINE_Y_2 = 75;
 
+const WELCOME_Y_1 = 150;
+const WELCOME_Y_2 = 200;
+const WELCOME_Y_3 = 300;
+const WELCOME_Y_4 = 350;
+const WELCOME_Y_5 = 400;
+const WELCOME_Y_6 = 450;
+const WELCOME_Y_7 = 500;
+const WELCOME_Y_8 = 600;
+const SCORE_LINE_X = 405;
+const SCORE_ICON_OFFSET_X = -45;
+const SCORE_ICON_OFFSET_Y = -6;
+
+const CHAR_WIDTH = 900/71.25; // experimentally measured value
+
+var drawingLifeBar = true;
 var lifeBarLabel = 'Lives Left: ';
 var lifeBarValue;
 
-// function drawKeyBar(keys, keysTileX, keysTileY) {
-//
-//     for (var thisKey = 0; thisKey < keys; thisKey++) {
-//         // tile position of this key
-//         var thisKeyX = (keysTileX + thisKey) * TILE_WIDTH;
-//         var thisKeyY = keysTileY * TILE_HEIGHT;
-//
-//         // draw this key
-//         canvasContext.drawImage(worldPics[WORLD_KEY], thisKeyX, thisKeyY);
-//     }
-//
-// } // =========================================================================== end function drawKeyBar
+var welcomeScreenCounter = 0;
+var welcomeScreenDone = false;
+
+
 
 var testLabel1 = 'LABEL 1  ';
 var testValue1 = 909;
@@ -41,29 +52,33 @@ var testValue4 = 909;
 var testLabel5 = 'LABEL 5  ';
 var testValue5 = 909;
 
+
+
 function drawGUI() {
 
     testLabel1 = 'Score  ';
-    testValue1 = gameScorePlayer1;
+    testValue1 = gameScore;
     //
     testLabel2 = 'Hi Score   ';
     testValue2 = hiScore;
     //
-    testLabel3 = 'Fire        ';
-    testValue3 = keyHeld_Fire;
 
 
 
 
-    colorText(testLabel1 + testValue1, 100, 50,  'white');
-    colorText(testLabel2 + testValue2, 100, 75,  'white');
+    // colorText(testLabel1 + testValue1, 100, 50,  'white');
+    // colorText(testLabel2 + testValue2, 100, 75,  'white');
     // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
     // colorText(testLabel5 + testValue5, 100, 150, 'white');
 
+    drawScoreBoard();
+
     if (gameOver){
-        colorText('GAME OVER', 400, 150, 'white');
-        colorText('Press Spacebar to Start', 400, 200, 'white');
+        // colorText('GAME OVER', 400, 150, 'white');
+        colorTextCentered('GAME OVER', CENTER_SCREEN_X, 175, CHAR_WIDTH, 'white')
+        // colorText('Press Spacebar to Start', 400, 200, 'white');
+        colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, 225, CHAR_WIDTH, 'white')
     }
 
     if (drawingLifeBar){
@@ -71,12 +86,31 @@ function drawGUI() {
     }
 
 
-    // drawKeyBar(blueWarrior.keysHeld, KEYS_OFFSET_X, KEYS_OFFSET_Y);
 
 } // =========================================================================== end function drawGUI
 
+// const SCORE_X_LEFT  = CENTER_SCREEN_X - 200;
+// const SCORE_X_RIGHT = CENTER_SCREEN_X + 200;
+// const SCORE_LINE_Y_1 = 50;
+// const SCORE_LINE_Y_2 = 75;
+
+function drawScoreBoard(){
+
+    // draw score
+    colorTextCentered('SCORE',    SCORE_X_LEFT, SCORE_LINE_Y_1, CHAR_WIDTH, 'white')
+    colorTextCentered('<      >', SCORE_X_LEFT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+    colorTextCentered(gameScore.toString(),  SCORE_X_LEFT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+
+    // draw hi score
+    colorTextCentered('HI SCORE', SCORE_X_RIGHT, SCORE_LINE_Y_1, CHAR_WIDTH, 'white')
+    colorTextCentered('<      >', SCORE_X_RIGHT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+    colorTextCentered(hiScore.toString(),    SCORE_X_RIGHT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+
+
+}
+
 function drawLifeBar(){
-    lifeBarValue = livesLeftPlayer1;
+    lifeBarValue = livesLeft;
     colorText(lifeBarLabel + lifeBarValue, LIFE_BAR_ORIGIN_X, LIFE_BAR_ORIGIN_Y,  'white');
 
     for (var i = 0; i < lifeBarValue; i++){
@@ -87,9 +121,46 @@ function drawLifeBar(){
 } // =========================================================================== end function drawLifeBar
 
 function drawWelcomeScreen(){
-    colorText('Welcome Screen', 400, 150, 'white');
-    colorText('Press Spacebar to Start', 400, 200, 'white');
+    // colorText('Welcome Screen', 400, 150, 'white');
+    // colorTextCentered('Welcome Screen', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white')
 
+    if (welcomeScreenDone || welcomeScreenCounter > 30){ // draw line 1
+        colorTextCentered('ALIENS', CENTER_SCREEN_X, WELCOME_Y_1, CHAR_WIDTH, 'white');
+    }
+    if (welcomeScreenDone || welcomeScreenCounter > 60){ // draw line 2
+        colorTextCentered('WHAT INVADE FROM SPACE', CENTER_SCREEN_X, WELCOME_Y_2, CHAR_WIDTH, 'white');
+    }
 
+    if (welcomeScreenDone || welcomeScreenCounter > 100){ // draw line 3
+        colorTextCentered('**** SCORE TABLE ****', CENTER_SCREEN_X, WELCOME_Y_3, CHAR_WIDTH, 'white');
+    }
+    if (welcomeScreenDone || welcomeScreenCounter > 110){ // draw line 4
+        colorText('=  10  POINTS', SCORE_LINE_X, WELCOME_Y_4, 'white');
+        drawBitmapCentered(alienPics[1], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_4 + SCORE_ICON_OFFSET_Y);
+    }
+    if (welcomeScreenDone || welcomeScreenCounter > 120){ // draw line 5
+        colorText('=  20  POINTS', SCORE_LINE_X, WELCOME_Y_5, 'white');
+        drawBitmapCentered(alienPics[2], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_5 + SCORE_ICON_OFFSET_Y);
+    }
+    if (welcomeScreenDone || welcomeScreenCounter > 130){ // draw line 6
+        colorText('=  30  POINTS', SCORE_LINE_X, WELCOME_Y_6, 'white');
+        drawBitmapCentered(alienPics[3], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_6 + SCORE_ICON_OFFSET_Y);
+    }
+    if (welcomeScreenDone || welcomeScreenCounter > 140){ // draw line 7
+        colorText('=  ?  MYSTERY', SCORE_LINE_X, WELCOME_Y_7, 'white');
+        drawBitmapCentered(alienPics[4], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_7 + SCORE_ICON_OFFSET_Y);
+    }
+
+    if (welcomeScreenDone){ // draw line 8
+        colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, WELCOME_Y_8, CHAR_WIDTH, 'white');
+    }
+
+    if (welcomeScreenCounter > 180){
+        welcomeScreenDone = true;
+    }
+
+    if (!welcomeScreenDone){
+        welcomeScreenCounter++;
+    }
 
 } // =========================================================================== end function drawWelcomeScreen

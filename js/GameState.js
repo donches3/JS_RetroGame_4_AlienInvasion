@@ -20,8 +20,8 @@ var revealFormationCounter;
 var playerActive = true;
 var playerDestroyed = true;
 
-var livesLeftPlayer1 = 3;
-var gameScorePlayer1 = 0;
+var livesLeft = 3;
+var gameScore = 0;
 var hiScore = 0;
 
 
@@ -77,7 +77,7 @@ function drawAllGameObjects() {
 function loadPlayerSequence(){
 
     if (playerLoadingTimer <= 0){
-        if (livesLeftPlayer1 > 0){
+        if (livesLeft > 0){
             loadPlayer();
             isPlayerLoading = false;
             loadingScreenActive = false;
@@ -99,6 +99,7 @@ function loadLevelSequence(){
     loadPlayer();
     loadingScreenActive = false;
     playScreenActive = true;
+    drawingLifeBar = true;
 
 
     // if (!bunkersLoaded){

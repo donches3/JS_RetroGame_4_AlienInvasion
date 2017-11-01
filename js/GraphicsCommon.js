@@ -40,6 +40,16 @@ function colorText(showWords, textX, textY, fillColor) {
     canvasContext.fillText(showWords, textX, textY);
 } // =========================================================================== end function colorText
 
+function colorTextCentered(showWords, centerX, atY, charWidth, fillColor){
+    var numChars = showWords.length
+    var atX = centerX - Math.floor((numChars * charWidth)/2);
+
+    canvasContext.font="bold 21px courier";
+    // canvasContext.font="bold 21px arial";
+    canvasContext.fillStyle = fillColor;
+    canvasContext.fillText(showWords, atX, atY);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 

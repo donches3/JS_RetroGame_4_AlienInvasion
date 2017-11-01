@@ -35,7 +35,7 @@ function updateAll() {
 
     if (welcomeScreenActive){
         drawWelcomeScreen();
-        if (keyHeld_Fire){
+        if (welcomeScreenDone && keyHeld_Fire){
             welcomeScreenActive = false;
             loadingScreenActive = true;
         }
@@ -63,15 +63,20 @@ function resetGame(){
     playScreenActive = false;
     gameOver = false;
 
+    welcomeScreenCounter = 0;
+    welcomeScreenDone = false;
+
     bunkersLoaded = false;
+    drawingLifeBar = false;
 
 
     playerActive = false;
+    sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
 
-    if (gameScorePlayer1 > hiScore){
-        hiScore = gameScorePlayer1;
+    if (gameScore > hiScore){
+        hiScore = gameScore;
     }
 
-    gameScorePlayer1 = 0;
-    livesLeftPlayer1 = 3;
+    gameScore = 0;
+    livesLeft = 3;
 } // =========================================================================== end function resetGame

@@ -100,7 +100,7 @@ function moveFormation(){
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
         // detect ground impact                                                 NOTE changes game state
-        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
+        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL && alienCounter > 0){
             levelOver = true;
             destroyPlayer();
         }

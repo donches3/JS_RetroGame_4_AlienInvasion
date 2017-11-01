@@ -36,7 +36,7 @@ function loadPlayer(){
     updatePlayerBounds();
     playerActive = true;
     if (playerDestroyed){
-        livesLeftPlayer1 -= 1;
+        livesLeft -= 1;
     }
     playerDestroyed = false;
 

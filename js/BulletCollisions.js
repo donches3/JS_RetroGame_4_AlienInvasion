@@ -224,7 +224,7 @@ function collideBulletsWithFormation(whichBullets){
                 if (isPointInsideRectangle(whichBullets[i].positionX, whichBullets[i].positionY, alienBounds)){
 
                     // award score
-                    gameScorePlayer1 += (cellKindHere * 100);
+                    gameScore += (cellKindHere * 10);
                     // destroy this alien by replacing it with an explosion type
                     alienGrid[cellIndex] = ALIEN_EXPLOSION;
                     // update alien count

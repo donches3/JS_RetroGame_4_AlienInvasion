@@ -119,8 +119,8 @@ function getSliderBounds(index){
 
 function hitSlider(index){
 
-    // get or randomly generate score
-    var thisScore = 500 + ((Math.floor(Math.random() * 5)) * 100);
+    // randomly generate score from 100 to 300 points at 100 point increments
+    var thisScore = 100 + ((Math.floor(Math.random() * 3)) * 100);
 
     // get position from slider
     var thisPosition = sliders[index].positionX;
