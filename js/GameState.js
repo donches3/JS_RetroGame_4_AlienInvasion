@@ -1,14 +1,18 @@
 
-var isPlayer1 = true;
 var gameOver = false;
 var levelOver = false;
 var gamePaused = false;
-var loadingPlayScreen = false;
+
+var welcomeScreenActive = true;
+var loadingScreenActive = false;
 var playScreenActive = true;
+
+
+
+var loadingPlayScreen = false;
 
 var isPlayerLoading = false
 var playerLoadingTimer = 0
-var isLevelLoading = false;
 var bunkersLoaded = false;
 var formationLoaded = false;
 var revealFormationCounter;
@@ -16,12 +20,10 @@ var revealFormationCounter;
 var playerActive = true;
 var playerDestroyed = true;
 
+var livesLeftPlayer1 = 3;
 var gameScorePlayer1 = 0;
-var gameScorePlayer2 = 0;
 var hiScore = 0;
 
-var livesLeftPlayer1 = 3;
-var livesLeftPlayer2 = 3;
 
 
 
@@ -78,7 +80,7 @@ function loadPlayerSequence(){
         if (livesLeftPlayer1 > 0){
             loadPlayer();
             isPlayerLoading = false;
-            isLevelLoading = false;
+            loadingScreenActive = false;
             gamePaused = false;
             playScreenActive = true;
         } else {
@@ -95,7 +97,7 @@ function loadLevelSequence(){
     loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
     loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
     loadPlayer();
-    isLevelLoading = false;
+    loadingScreenActive = false;
     playScreenActive = true;
 
 

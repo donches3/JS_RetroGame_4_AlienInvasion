@@ -23,15 +23,24 @@ function imageLoadingDoneSoStartGame() {
 
     setupInput();
 
-    playerActive = false;
-    playScreenActive = false;
-    loadLevelSequence();
+    resetGame();
+    // loadLevelSequence();
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 
 function updateAll() {
 
-    if (isLevelLoading){
+    colorRect(0,0, canvas.width, canvas.height, 'black');
+
+    if (welcomeScreenActive){
+        drawWelcomeScreen();
+        if (keyHeld_Fire){
+            welcomeScreenActive = false;
+            loadingScreenActive = true;
+        }
+    }
+
+    if (loadingScreenActive){
         loadLevelSequence();
     }
 
@@ -42,3 +51,19 @@ function updateAll() {
     drawGUI();
 
 } // =========================================================================== end function updateAll
+
+function resetGame(){
+    welcomeScreenActive = true;
+    loadingScreenActive = false;
+    playScreenActive = false;
+    gameOver = false;
+
+    playerActive = false;
+
+    if (gameScorePlayer1 > hiScore){
+        hiScore = gameScorePlayer1;
+    }
+
+    gameScorePlayer1 = 0;
+    livesLeftPlayer1 = 3;
+} // =========================================================================== end function resetGame

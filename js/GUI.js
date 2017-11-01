@@ -2,6 +2,17 @@
 const KEYS_OFFSET_X = 1;
 const KEYS_OFFSET_Y = 0;
 
+const LIFE_BAR_ORIGIN_X = 50;
+const LIFE_BAR_ORIGIN_Y = 700;
+const LIFE_BAR_ICON_OFFSET_X = 180;
+const LIFE_BAR_ICON_OFFSET_Y = -20;
+const LIFE_BAR_ICON_PITCH = 64;
+
+var drawingLifeBar = true;
+
+var lifeBarLabel = 'Lives Left: ';
+var lifeBarValue;
+
 // function drawKeyBar(keys, keysTileX, keysTileY) {
 //
 //     for (var thisKey = 0; thisKey < keys; thisKey++) {
@@ -44,7 +55,7 @@ function drawGUI() {
 
 
 
-    colorText(testLabel1 + testValue1, 100, 50,  'white');
+    // colorText(testLabel1 + testValue1, 100, 50,  'white');
     // colorText(testLabel2 + testValue2, 100, 75,  'white');
     // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
@@ -54,7 +65,30 @@ function drawGUI() {
         colorText('GAME OVER', 400, 150, 'white');
     }
 
+    if (drawingLifeBar){
+        drawLifeBar();
+    }
+
 
     // drawKeyBar(blueWarrior.keysHeld, KEYS_OFFSET_X, KEYS_OFFSET_Y);
 
 } // =========================================================================== end function drawGUI
+
+function drawLifeBar(){
+    lifeBarValue = livesLeftPlayer1;
+    colorText(lifeBarLabel + lifeBarValue, LIFE_BAR_ORIGIN_X, LIFE_BAR_ORIGIN_Y,  'white');
+
+    for (var i = 0; i < lifeBarValue; i++){
+        var drawX = LIFE_BAR_ORIGIN_X + LIFE_BAR_ICON_OFFSET_X + (i * LIFE_BAR_ICON_PITCH);
+        var drawY = LIFE_BAR_ORIGIN_Y + LIFE_BAR_ICON_OFFSET_Y;
+        drawBitmap(playerPic, drawX, drawY);
+    }
+} // =========================================================================== end function drawLifeBar
+
+function drawWelcomeScreen(){
+    colorText('Welcome Screen', 400, 150, 'white');
+    colorText('Press Spacebar to Start', 400, 200, 'white');
+
+
+
+} // =========================================================================== end function drawWelcomeScreen
