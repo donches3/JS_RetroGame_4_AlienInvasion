@@ -43,11 +43,11 @@ var testValue5 = 909;
 
 function drawGUI() {
 
-    testLabel1 = 'Lives Left  ';
-    testValue1 = livesLeftPlayer1;
+    testLabel1 = 'Score  ';
+    testValue1 = gameScorePlayer1;
     //
-    testLabel2 = 'Move Left   ';
-    testValue2 = keyHeld_MoveLeft;
+    testLabel2 = 'Hi Score   ';
+    testValue2 = hiScore;
     //
     testLabel3 = 'Fire        ';
     testValue3 = keyHeld_Fire;
@@ -55,14 +55,15 @@ function drawGUI() {
 
 
 
-    // colorText(testLabel1 + testValue1, 100, 50,  'white');
-    // colorText(testLabel2 + testValue2, 100, 75,  'white');
+    colorText(testLabel1 + testValue1, 100, 50,  'white');
+    colorText(testLabel2 + testValue2, 100, 75,  'white');
     // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
     // colorText(testLabel5 + testValue5, 100, 150, 'white');
 
     if (gameOver){
         colorText('GAME OVER', 400, 150, 'white');
+        colorText('Press Spacebar to Start', 400, 200, 'white');
     }
 
     if (drawingLifeBar){

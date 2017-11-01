@@ -23,6 +23,7 @@ function imageLoadingDoneSoStartGame() {
 
     setupInput();
 
+    hiScore = 0;
     resetGame();
     // loadLevelSequence();
 
@@ -48,6 +49,10 @@ function updateAll() {
         managePlayScreen();
     }
 
+    if (gameOver && keyHeld_Fire){
+        resetGame();
+    }
+
     drawGUI();
 
 } // =========================================================================== end function updateAll
@@ -57,6 +62,9 @@ function resetGame(){
     loadingScreenActive = false;
     playScreenActive = false;
     gameOver = false;
+
+    bunkersLoaded = false;
+
 
     playerActive = false;
 
