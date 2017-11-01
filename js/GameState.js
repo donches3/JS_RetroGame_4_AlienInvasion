@@ -24,27 +24,56 @@ var livesLeft = 3;
 var gameScore = 0;
 var hiScore = 0;
 
-
+var isLevelOverTimerRunning = false;
+var isLevelOverTimerDone = false;
+var levelOverTimer = 90;
+var waveCleared = false;
 
 
 
 function managePlayScreen(){
 
-    if (!gameOver){
+    if (!gameOver && !waveCleared){
         moveAllGameObjects();
     }
 
-    if (playerExplosionActive){
-        addToPlayerExplosion()
-    }
 
-    if (playerDestroyed && !isPlayerLoading){
+    // player destruction and reloading timed sequence
+    if (playerDestroyed && !isPlayerLoading && !levelOver){
         isPlayerLoading = true;
         playerLoadingTimer = 90;
     }
     if (isPlayerLoading){
         loadPlayerSequence();
     }
+    if (playerExplosionActive){
+        addToPlayerExplosion()
+    }
+
+    // Start Level Over timer
+    if (levelOver && !isLevelOverTimerRunning){
+        isLevelOverTimerRunning = true;
+        levelOverTimer = 90;
+    }
+    // Stop timer
+    if (levelOverTimer <= 0){
+        isLevelOverTimerRunning = false;
+        isLevelOverTimerDone = true;
+    }
+    // Increment timer
+    if (isLevelOverTimerRunning){
+        levelOverTimer--;
+    }
+
+    if (isLevelOverTimerDone){
+        if (livesLeft <= 0){
+            gameOver = true;
+        } else {
+            waveCleared = true;
+        }
+    }
+
+
 
     drawAllGameObjects();
 } // =========================================================================== end function managePlayScreen
