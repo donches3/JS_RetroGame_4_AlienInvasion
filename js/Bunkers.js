@@ -52,6 +52,8 @@ function loadBunkers(whichBunker){
         bunkersAll.push(bunkerFresh); // adds bunkerFresh array to end of array
         createThisBunkerBounds();
     }
+    
+    bunkersLoaded = true;
 
 } // =========================================================================== end function loadBunkers
 

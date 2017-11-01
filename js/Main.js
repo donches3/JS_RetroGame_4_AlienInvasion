@@ -23,13 +23,17 @@ function imageLoadingDoneSoStartGame() {
 
     setupInput();
 
-    loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
-    loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
-    loadPlayer();
+    playerActive = false;
+    playScreenActive = false;
+    loadLevelSequence();
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 
 function updateAll() {
+
+    if (isLevelLoading){
+        loadLevelSequence();
+    }
 
     if(playScreenActive){
         managePlayScreen();

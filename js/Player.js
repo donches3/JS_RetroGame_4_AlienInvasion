@@ -35,8 +35,10 @@ function loadPlayer(){
     playerX = PLAYER_START_X;
     updatePlayerBounds();
     playerActive = true;
+    if (playerDestroyed){
+        livesLeftPlayer1 -= 1;
+    }
     playerDestroyed = false;
-    livesLeftPlayer1 -= 1;
 
 } // =========================================================================== end function loadPlayer
 

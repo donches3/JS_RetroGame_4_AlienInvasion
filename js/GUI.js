@@ -32,8 +32,8 @@ var testValue5 = 909;
 
 function drawGUI() {
 
-    testLabel1 = 'Move Right  ';
-    testValue1 = keyHeld_MoveRight;
+    testLabel1 = 'Lives Left  ';
+    testValue1 = livesLeftPlayer1;
     //
     testLabel2 = 'Move Left   ';
     testValue2 = keyHeld_MoveLeft;
@@ -44,7 +44,7 @@ function drawGUI() {
 
 
 
-    // colorText(testLabel1 + testValue1, 100, 50,  'white');
+    colorText(testLabel1 + testValue1, 100, 50,  'white');
     // colorText(testLabel2 + testValue2, 100, 75,  'white');
     // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
@@ -52,7 +52,6 @@ function drawGUI() {
 
     if (gameOver){
         colorText('GAME OVER', 400, 150, 'white');
-
     }
 
 

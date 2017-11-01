@@ -1,14 +1,20 @@
 
 var isPlayer1 = true;
 var gameOver = false;
+var levelOver = false;
 var gamePaused = false;
 var loadingPlayScreen = false;
 var playScreenActive = true;
+
 var isPlayerLoading = false
 var playerLoadingTimer = 0
+var isLevelLoading = false;
+var bunkersLoaded = false;
+var formationLoaded = false;
+var revealFormationCounter;
 
 var playerActive = true;
-var playerDestroyed = false;
+var playerDestroyed = true;
 
 var gameScorePlayer1 = 0;
 var gameScorePlayer2 = 0;
@@ -72,12 +78,51 @@ function loadPlayerSequence(){
         if (livesLeftPlayer1 > 0){
             loadPlayer();
             isPlayerLoading = false;
+            isLevelLoading = false;
             gamePaused = false;
+            playScreenActive = true;
         } else {
             gameOver = true;
         }
-
     }
 
     playerLoadingTimer--;
+
 } // =========================================================================== end function loadPlayerSequence
+
+function loadLevelSequence(){
+
+    loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
+    loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
+    loadPlayer();
+    isLevelLoading = false;
+    playScreenActive = true;
+
+
+    // if (!bunkersLoaded){
+    //     loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
+    // }
+    // drawWorld();
+    // drawBunkers();
+    //
+    // if (!formationLoaded){
+    //     loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
+    //     revealFormationCounter = 0;
+    // }
+    // if (revealFormationCounter < alienGrid.length){
+    //     drawPartialFormation(revealFormationCounter);
+    //     revealFormationCounter++;
+    //     if (revealFormationCounter >= alienGrid.length)
+    //     {
+    //         isPlayerLoading = true;
+    //         playerLoadingTimer = 60;
+    //     }
+    // } else {
+    //     drawFormation();
+    // }
+    //
+    // if (isPlayerLoading){
+    //     loadPlayerSequence();
+    // }
+
+} // =========================================================================== end function loadLevelSequence

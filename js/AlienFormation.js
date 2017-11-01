@@ -78,9 +78,12 @@ var isMovingRight = true;
 
 function loadFormation(whichFormation) {
     alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
+    formationOriginX = FORMATION_START_X;
+    formationOriginY = FORMATION_START_Y;
     UpdateFormationBounds();
     alienCounter = countFormationAliens();
     formationHoldCounter = Math.floor(alienCounter/2);
+    formationLoaded = true;
 } // =========================================================================== end function loadFormation
 
 function moveFormation(){
@@ -98,7 +101,13 @@ function moveFormation(){
 
         // detect ground impact                                                 NOTE changes game state
         if (formationBounds.bottom >= canvas.height - GROUND_LEVEL){
+            levelOver = true;
             destroyPlayer();
+        }
+
+        // detect no aliens left                                                NOTE changes game state
+        if (alienCounter == 0 && sliders.length == 0){
+            levelOver = true;
         }
     }
 
@@ -107,50 +116,57 @@ function moveFormation(){
 
 function drawFormation() {
 
-    var arrayIndex = 0;
-    var drawCellX = formationOriginX;
-    var drawCellY = formationOriginY;
+    var drawCellCenterX;
+    var drawCellCenterY;
+    var rowCol = {row:0, col:0};
+    var cellKindHere;
+    var isAnimated;
 
+    for (var i = 0; i < alienGrid.length; i++){
 
-    // // draw formation bounds, both full and actual -----------------------------////////////////
-    // colorRect(  formationOriginX,
-    //             formationOriginY,
-    //             ALIEN_CELL_WIDTH * ALIEN_GRID_COLS,
-    //             ALIEN_CELL_HEIGHT * ALIEN_GRID_ROWS, '#222222'); // ------------////////////////
-    // colorRect(  formationBounds.left,
-    //             formationBounds.top,
-    //             formationBounds.right - formationBounds.left,
-    //             formationBounds.bottom - formationBounds.top, '#333333'); // -----------------////////////////
+        cellKindHere = alienGrid[i];
+        rowCol = arrayIndexToRowCol(i, ALIEN_GRID_COLS);
+        drawCellCenterX = formationOriginX + (rowCol.col * ALIEN_CELL_WIDTH)  + Math.floor(ALIEN_CELL_WIDTH/2);
+        drawCellCenterY = formationOriginY + (rowCol.row * ALIEN_CELL_HEIGHT) + Math.floor(ALIEN_CELL_HEIGHT/2);
+        isAnimated = false;
 
-    // cycle through rows
-    for(var eachRow = 0; eachRow < ALIEN_GRID_ROWS; eachRow++) {
-        // cycle through columns
-        for(var eachCol = 0; eachCol < ALIEN_GRID_COLS; eachCol++) {
-            var cellKindHere = alienGrid[arrayIndex];
-            var isAnimated = false;
-
-            // check if current type is one of the animated types
-            for (var i = 0; i < ANIMATED_TYPES.length; i++){
-                if (cellKindHere == ANIMATED_TYPES[i]){
-                    isAnimated = true;
-                }
+        // check if current type is one of the animated types
+        for (var j = 0; j < ANIMATED_TYPES.length; j++){
+            if (cellKindHere == ANIMATED_TYPES[j]){
+                isAnimated = true;
             }
+        }
 
-            // draw current cell
-            if (frameToggle && isAnimated){ // draw frame B
-                drawBitmapCentered(alienPics[cellKindHere + frameToggleOffset], drawCellX + ALIEN_CELL_WIDTH/2, drawCellY + ALIEN_CELL_HEIGHT/2);
-            } else if (alienPics[cellKindHere] != 0){ // if not empty draw frame A
-                drawBitmapCentered(alienPics[cellKindHere], drawCellX + ALIEN_CELL_WIDTH/2, drawCellY + ALIEN_CELL_HEIGHT/2);
-            }
+        // draw current cell
+        if (frameToggle && isAnimated){ // draw frame 2
+            drawBitmapCentered(alienPics[cellKindHere + frameToggleOffset], drawCellCenterX, drawCellCenterY);
+        } else if (alienPics[cellKindHere] != 0){ // if not empty draw frame A
+            drawBitmapCentered(alienPics[cellKindHere], drawCellCenterX, drawCellCenterY);
+        }
 
-            drawCellX += ALIEN_CELL_WIDTH; // to next cell X position in row
-            arrayIndex++;
-        } // end for eachCol
-        drawCellX = formationOriginX; // carriage return
-        drawCellY += ALIEN_CELL_HEIGHT; // to next row Y position
-    } // end for eachRow
+    } // end for i
 
 } // =========================================================================== end function drawFormation
+
+function drawPartialFormation(howManyToDraw){
+    var drawCellCenterX;
+    var drawCellCenterY;
+    var rowCol = {row:0, col:0};
+    var cellKindHere;
+
+    if (howManyToDraw > alienGrid.length){ // error correction
+        howManyToDraw = alienGrid.length;
+    }
+
+    for (var i = 0; i < howManyToDraw; i++){
+        cellKindHere = alienGrid[i];
+        rowCol = arrayIndexToRowCol(i, ALIEN_GRID_COLS);
+        drawCellCenterX = formationOriginX + (rowCol.col * ALIEN_CELL_WIDTH)  + Math.floor(ALIEN_CELL_WIDTH/2);
+        drawCellCenterY = formationOriginY + (rowCol.row * ALIEN_CELL_HEIGHT) + Math.floor(ALIEN_CELL_HEIGHT/2);
+        drawBitmapCentered(alienPics[cellKindHere], drawCellCenterX, drawCellCenterY);
+    } // end for i
+
+} // =========================================================================== end function drawPartialFormation
 
 function getFormationTop(){
 
