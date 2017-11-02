@@ -178,7 +178,7 @@ function collideBulletsWithPlayer(whichBullets){
 
     // ===== check collision with Player =====
 
-    if (!playerDestroyed){
+    if (playerLoaded){
         // this loop must start at the end and increment backwards
         // because the length of the array is changing while this loop is running
         for (var i = whichBullets.length - 1; i >= 0; i--){ // does not run if array is empty

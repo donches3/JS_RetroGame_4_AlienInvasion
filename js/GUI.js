@@ -110,7 +110,7 @@ function drawScoreBoard(){
 }
 
 function drawLifeBar(){
-    lifeBarValue = livesLeft;
+    lifeBarValue = livesOnDeck;
     colorText(lifeBarLabel + lifeBarValue, LIFE_BAR_ORIGIN_X, LIFE_BAR_ORIGIN_Y,  'white');
 
     for (var i = 0; i < lifeBarValue; i++){
@@ -124,29 +124,29 @@ function drawWelcomeScreen(){
     // colorText('Welcome Screen', 400, 150, 'white');
     // colorTextCentered('Welcome Screen', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white')
 
-    if (welcomeScreenDone || welcomeScreenCounter > 30){ // draw line 1
+    if (welcomeScreenDone || welcomeScreenCounter > 20){ // draw line 1
         colorTextCentered('ALIENS', CENTER_SCREEN_X, WELCOME_Y_1, CHAR_WIDTH, 'white');
     }
-    if (welcomeScreenDone || welcomeScreenCounter > 60){ // draw line 2
+    if (welcomeScreenDone || welcomeScreenCounter > 30){ // draw line 2
         colorTextCentered('WHAT INVADE FROM SPACE', CENTER_SCREEN_X, WELCOME_Y_2, CHAR_WIDTH, 'white');
     }
 
-    if (welcomeScreenDone || welcomeScreenCounter > 100){ // draw line 3
+    if (welcomeScreenDone || welcomeScreenCounter > 60){ // draw line 3
         colorTextCentered('**** SCORE TABLE ****', CENTER_SCREEN_X, WELCOME_Y_3, CHAR_WIDTH, 'white');
     }
-    if (welcomeScreenDone || welcomeScreenCounter > 110){ // draw line 4
+    if (welcomeScreenDone || welcomeScreenCounter > 70){ // draw line 4
         colorText('=  10  POINTS', SCORE_LINE_X, WELCOME_Y_4, 'white');
         drawBitmapCentered(alienPics[1], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_4 + SCORE_ICON_OFFSET_Y);
     }
-    if (welcomeScreenDone || welcomeScreenCounter > 120){ // draw line 5
+    if (welcomeScreenDone || welcomeScreenCounter > 80){ // draw line 5
         colorText('=  20  POINTS', SCORE_LINE_X, WELCOME_Y_5, 'white');
         drawBitmapCentered(alienPics[2], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_5 + SCORE_ICON_OFFSET_Y);
     }
-    if (welcomeScreenDone || welcomeScreenCounter > 130){ // draw line 6
+    if (welcomeScreenDone || welcomeScreenCounter > 90){ // draw line 6
         colorText('=  30  POINTS', SCORE_LINE_X, WELCOME_Y_6, 'white');
         drawBitmapCentered(alienPics[3], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_6 + SCORE_ICON_OFFSET_Y);
     }
-    if (welcomeScreenDone || welcomeScreenCounter > 140){ // draw line 7
+    if (welcomeScreenDone || welcomeScreenCounter > 100){ // draw line 7
         colorText('=  ?  MYSTERY', SCORE_LINE_X, WELCOME_Y_7, 'white');
         drawBitmapCentered(alienPics[4], SCORE_LINE_X + SCORE_ICON_OFFSET_X, WELCOME_Y_7 + SCORE_ICON_OFFSET_Y);
     }
@@ -155,7 +155,7 @@ function drawWelcomeScreen(){
         colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, WELCOME_Y_8, CHAR_WIDTH, 'white');
     }
 
-    if (welcomeScreenCounter > 180){
+    if (welcomeScreenCounter > 130){
         welcomeScreenDone = true;
     }
 

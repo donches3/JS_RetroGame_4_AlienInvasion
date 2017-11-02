@@ -76,14 +76,33 @@ var isMovingRight = true;
 
 // ============================================================================= end vars
 
-function loadFormation(whichFormation) {
-    alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
+function unloadFormation(){
+
+    // reset to initial values
+    alienGrid = []; // empties out existing formation
+    alienCounter = 0;
+    isMovingRight = true;
+    frameToggle = false;
     formationOriginX = FORMATION_START_X;
     formationOriginY = FORMATION_START_Y;
+
+    formationLoaded = false;
+
+} // =========================================================================== end function unloadFormation
+
+function loadFormation(whichFormation) {
+
+    if (formationLoaded){
+        unloadFormation();
+    }
+
+    alienGrid = whichFormation.slice(); // copies all values in whichFormation into alienGrid
     UpdateFormationBounds();
     alienCounter = countFormationAliens();
     formationHoldCounter = Math.floor(alienCounter/2);
+
     formationLoaded = true;
+
 } // =========================================================================== end function loadFormation
 
 function moveFormation(){
@@ -101,14 +120,12 @@ function moveFormation(){
 
         // detect ground impact                                                 NOTE changes game state
         if (formationBounds.bottom >= canvas.height - GROUND_LEVEL && alienCounter > 0){
-            levelOver = true;
-            destroyPlayer();
+            levelOverCondition = true;
+            if (playerLoaded){
+                destroyPlayer();
+            }
         }
 
-        // detect no aliens left                                                NOTE changes game state
-        if (alienCounter == 0 && sliders.length == 0){
-            levelOver = true;
-        }
     }
 
     formationHoldCounter--;

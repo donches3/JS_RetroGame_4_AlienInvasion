@@ -15,6 +15,15 @@ var sliderExplosions = [];
 
 // ============================================================================= end vars
 
+function unloadSliders(){
+
+    sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
+    sliderSpawnsOnRight = true;
+    sliders = [];
+    sliderExplosions = [];
+
+} // =========================================================================== end function unloadSliders
+
 function manageSliders(){
 
     spawnOccasionalSlider();

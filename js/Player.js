@@ -19,6 +19,24 @@ var playerExplosionBounds;
 
 // ============================================================================= end vars
 
+function resetPlayer(){
+
+    // this does not unload the player
+
+    playerX = 0;
+    playerBounds = {top:0, bottom:0, left:0, right:0};
+
+    playerActive = false;
+
+    playerExplosionCounter;
+    playerExplosionActive = false;
+    playerExplosionBounds = {top:0, bottom:0, left:0, right:0};
+
+    isLoadPlayerTimerRunning = false;
+    isLoadPlayerTimerDone = false;
+
+} // =========================================================================== end function resetPlayer
+
 function managePlayer(){
 
     if (playerActive){
@@ -34,11 +52,10 @@ function loadPlayer(){
 
     playerX = PLAYER_START_X;
     updatePlayerBounds();
-    playerActive = true;
-    if (playerDestroyed){
-        livesLeft -= 1;
+    if (!playerLoaded){
+        livesOnDeck -= 1;
     }
-    playerDestroyed = false;
+    playerLoaded = true;
 
 } // =========================================================================== end function loadPlayer
 
@@ -53,19 +70,17 @@ function updatePlayerBounds(){
 
 function movePlayer(){
 
-    if (playerActive){
-        if (keyHeld_MoveRight && playerBounds.right < canvas.width - PLAYER_EDGE_LIMIT){ // moving right and not at right edge
-            playerX += PLAYER_SPEED;
-        }
-        if (keyHeld_MoveLeft && playerBounds.left > PLAYER_EDGE_LIMIT){ // moving left and not at left edge
-            playerX -= PLAYER_SPEED;
-        }
+    if (keyHeld_MoveRight && playerBounds.right < canvas.width - PLAYER_EDGE_LIMIT){ // moving right and not at right edge
+        playerX += PLAYER_SPEED;
+    }
+    if (keyHeld_MoveLeft && playerBounds.left > PLAYER_EDGE_LIMIT){ // moving left and not at left edge
+        playerX -= PLAYER_SPEED;
     }
 
 } // =========================================================================== end function movePlayer
 
 function drawPlayer(){
-    if (!playerDestroyed) {
+    if (playerLoaded) {
         drawBitmapCentered(playerPic, playerX, PLAYER_Y);
     }
 } // =========================================================================== end function drawPlayer
@@ -73,7 +88,7 @@ function drawPlayer(){
 function destroyPlayer(){
 
     playerActive = false;
-    playerDestroyed = true;
+    playerLoaded = false;
     gamePaused = true;
     startPlayerExplosion();
 

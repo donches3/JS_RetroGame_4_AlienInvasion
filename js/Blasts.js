@@ -7,6 +7,11 @@ var playerBlasts = [];
 
 // ============================================================================= end vars
 
+function unloadBlasts(){
+    bulletBlasts = [];
+    playerBlasts = [];
+} // =========================================================================== end function unloadBlasts
+
 function drawTheseBlasts(whichBlasts){
 
     // draw all blasts in this array

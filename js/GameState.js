@@ -1,35 +1,36 @@
 
 var gameOver = false;
-var levelOver = false;
+var levelOverCondition = false;
 var gamePaused = false;
+
+var livesOnDeck = 3;
+var gameScore = 0;
+var hiScore = 0;
 
 var welcomeScreenActive = true;
 var loadingScreenActive = false;
 var playScreenActive = true;
 
-
-
-var loadingPlayScreen = false;
-
-var isPlayerLoading = false
-var playerLoadingTimer = 0
 var bunkersLoaded = false;
 var formationLoaded = false;
-var revealFormationCounter;
+var playerLoaded = false;
+var levelLoaded = false;
 
 var playerActive = true;
-var playerDestroyed = true;
 
-var livesLeft = 3;
-var gameScore = 0;
-var hiScore = 0;
+var revealFormationCounter;
+
 
 var isLevelOverTimerRunning = false;
 var isLevelOverTimerDone = false;
 var levelOverTimer = 90;
 var waveCleared = false;
 
+var isLoadPlayerTimerRunning = false;
+var isLoadPlayerTimerDone = false;
+var loadPlayerCounter = 0;
 
+// ============================================================================= end vars
 
 function managePlayScreen(){
 
@@ -37,49 +38,89 @@ function managePlayScreen(){
         moveAllGameObjects();
     }
 
-
     // player destruction and reloading timed sequence
-    if (playerDestroyed && !isPlayerLoading && !levelOver){
-        isPlayerLoading = true;
-        playerLoadingTimer = 90;
+    if (!playerLoaded && !levelOverCondition){
+        loadPlayerTimer();
     }
-    if (isPlayerLoading){
-        loadPlayerSequence();
+
+    // detect no aliens left                                                NOTE changes game state
+    if (alienCounter == 0 && sliders.length == 0){
+        levelOverCondition = true;
     }
-    if (playerExplosionActive){
-        addToPlayerExplosion()
+    if (levelOverCondition){
+        // changes game state to Game Over or Wave Cleared after timer finishes
+        levelEndTimer();
     }
+
+    drawAllGameObjects();
+
+} // =========================================================================== end function managePlayScreen
+
+
+function loadPlayerTimer(){
+    // Start load player timer
+    if (!playerLoaded && !isLoadPlayerTimerRunning){
+        isLoadPlayerTimerRunning = true;
+        loadPlayerCounter = 90;
+    }
+    // Stop timer
+    if (loadPlayerCounter <= 0 && isLoadPlayerTimerRunning){
+        isLoadPlayerTimerDone = true;
+        isLoadPlayerTimerRunning = false; // reset to initial value and stops timer
+        loadPlayerCounter = 90; // reset to initial value
+    }
+    // Increment timer
+    if (isLoadPlayerTimerRunning){
+        loadPlayerCounter--;
+    }
+
+    if (isLoadPlayerTimerDone){ // only loads player after timer has finished
+
+        if (livesOnDeck > 0){
+            loadPlayer();
+            playerActive = true;
+            loadingScreenActive = false;
+            gamePaused = false;
+            playScreenActive = true;
+        } else {
+            gameOver = true;
+        }
+
+    }
+
+} // =========================================================================== end function loadPlayerTimer
+
+function levelEndTimer(){
 
     // Start Level Over timer
-    if (levelOver && !isLevelOverTimerRunning){
+    if (levelOverCondition && !isLevelOverTimerRunning){
         isLevelOverTimerRunning = true;
         levelOverTimer = 90;
     }
     // Stop timer
-    if (levelOverTimer <= 0){
-        isLevelOverTimerRunning = false;
+    if (levelOverTimer <= 0 && isLevelOverTimerRunning){
         isLevelOverTimerDone = true;
+        isLevelOverTimerRunning = false; // reset to initial value and stops timer
+        levelOverCondition = false; // reset to initial value
+        levelOverTimer = 90; // reset to initial value
     }
     // Increment timer
     if (isLevelOverTimerRunning){
         levelOverTimer--;
     }
 
-    if (isLevelOverTimerDone){
-        if (livesLeft <= 0){
-            gameOver = true;
+    if (isLevelOverTimerDone){ // only changes game state after timer has finished
+        if (livesOnDeck <= 0 && !playerLoaded){
+            gameOver = true; //                                                 NOTE changes game state
         } else {
-            waveCleared = true;
+            waveCleared = true; //                                              NOTE changes game state
         }
     }
 
-
-
-    drawAllGameObjects();
-} // =========================================================================== end function managePlayScreen
+} // =========================================================================== end function levelEndTimer
 
 function moveAllGameObjects() {
-    // blueWarrior.move(); //  no longer needed --------------------------------////////////////
+
     if (!gamePaused){
         moveFormation();
         managePlayer();
@@ -87,74 +128,66 @@ function moveAllGameObjects() {
     manageSliders();
     incrementTheseBlasts(bulletBlasts);
     incrementTheseBlasts(playerBlasts);
-
+    if (playerExplosionActive){
+        addToPlayerExplosion()
+    }
     manageBullets(); // bullets should be the last thing moved
+
 } // =========================================================================== end function moveAllGameObjects
 
 function drawAllGameObjects() {
+
     drawWorld();
     drawBunkers();
     drawFormation();
     drawSliders();
-    drawPlayer();
+    if (playerLoaded){
+        drawPlayer();
+    }
     drawBullets();
     drawTheseBlasts(bulletBlasts);
     drawTheseBlasts(playerBlasts);
-    // blueWarrior.draw(); //  no longer needed --------------------------------////////////////
+
 } // =========================================================================== end function drawAllGameObjects
 
-function loadPlayerSequence(){
+function unloadLevel(){
 
-    if (playerLoadingTimer <= 0){
-        if (livesLeft > 0){
-            loadPlayer();
-            isPlayerLoading = false;
-            loadingScreenActive = false;
-            gamePaused = false;
-            playScreenActive = true;
-        } else {
-            gameOver = true;
-        }
-    }
+    unloadFormation();
+    unloadBunkers();
+    unloadSliders();
+    unloadBullets();
+    unloadBlasts();
+    resetPlayer(); // this does not unload the player
 
-    playerLoadingTimer--;
+    waveCleared = false;
+    levelLoaded = false;
 
-} // =========================================================================== end function loadPlayerSequence
+} // =========================================================================== end function unloadLevel
 
 function loadLevelSequence(){
 
+    if (levelLoaded){
+        unloadLevel();
+    }
     loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
-    loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
-    loadPlayer();
-    loadingScreenActive = false;
-    playScreenActive = true;
-    drawingLifeBar = true;
 
+    if (bunkersLoaded){
+        loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
+    }
+    if (formationLoaded){
+        loadPlayerTimer();
+    }
+    if (playerLoaded){
 
-    // if (!bunkersLoaded){
-    //     loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
-    // }
-    // drawWorld();
-    // drawBunkers();
-    //
-    // if (!formationLoaded){
-    //     loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
-    //     revealFormationCounter = 0;
-    // }
-    // if (revealFormationCounter < alienGrid.length){
-    //     drawPartialFormation(revealFormationCounter);
-    //     revealFormationCounter++;
-    //     if (revealFormationCounter >= alienGrid.length)
-    //     {
-    //         isPlayerLoading = true;
-    //         playerLoadingTimer = 60;
-    //     }
-    // } else {
-    //     drawFormation();
-    // }
-    //
-    // if (isPlayerLoading){
-    //     loadPlayerSequence();
-    // }
+        playerActive = true; // move this elsewhere ------------------------------- ////////////////
+        playScreenActive = true;
+        drawingLifeBar = true;
+        waveCleared = false;
+        levelLoaded = true;
+
+        loadingScreenActive = false;
+
+    }
+
 
 } // =========================================================================== end function loadLevelSequence

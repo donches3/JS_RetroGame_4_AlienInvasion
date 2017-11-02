@@ -43,10 +43,20 @@ var bunkerDomainBounds = {  top:BUNKERS_ORIGIN_Y,
 
 // ============================================================================= end vars
 
+function unloadBunkers(){
+
+    bunkersAll = []; // empty out existing bunkers
+    bunkersAllBounds = []; // empty out existing bunker bounds
+
+    bunkersLoaded = false;
+
+} // =========================================================================== end function unloadBunkers
 
 function loadBunkers(whichBunker){
 
-    bunkersAll = []; // empties out existing bunkers
+    if (bunkersLoaded){
+        unloadBunkers();
+    }
 
     for (var i = 0; i < BUNKER_QUANTITY; i++){
         var bunkerFresh = whichBunker.slice(); // copies all values in whichBunker into bunkerFresh

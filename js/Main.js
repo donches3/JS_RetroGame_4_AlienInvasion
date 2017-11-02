@@ -33,7 +33,7 @@ function updateAll() {
 
     colorRect(0,0, canvas.width, canvas.height, 'black');
 
-    if (welcomeScreenActive){
+    if (welcomeScreenActive){ // -------------------------------- Welcome Screen
         drawWelcomeScreen();
         if (welcomeScreenDone && keyHeld_Fire){
             welcomeScreenActive = false;
@@ -41,12 +41,17 @@ function updateAll() {
         }
     }
 
-    if (loadingScreenActive){
+    if (loadingScreenActive){ // -------------------------- Level Loading Screen
         loadLevelSequence();
     }
 
-    if(playScreenActive){
+    if(playScreenActive){ // --------------------------------------- Play Screen
         managePlayScreen();
+    }
+
+    if (waveCleared){
+        loadingScreenActive = true;
+        waveCleared = false;
     }
 
     if (gameOver && keyHeld_Fire){
@@ -66,17 +71,14 @@ function resetGame(){
     welcomeScreenCounter = 0;
     welcomeScreenDone = false;
 
-    bunkersLoaded = false;
     drawingLifeBar = false;
 
-
-    playerActive = false;
-    sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
+    unloadLevel();
 
     if (gameScore > hiScore){
         hiScore = gameScore;
     }
 
     gameScore = 0;
-    livesLeft = 3;
+    livesOnDeck = 3;
 } // =========================================================================== end function resetGame
