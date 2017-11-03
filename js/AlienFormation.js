@@ -12,20 +12,8 @@ const FORMATION_EDGE_LIMIT = 40;
 var formationOriginX = FORMATION_START_X;
 var formationOriginY = FORMATION_START_Y;
 
-// formation bounds
-// var formationBounds.top;
-// var formationBounds.left;
-// var formationBounds.bottom;
-// var formationBounds.right;
 var formationBounds = {top:0, bottom:0, left:0, right:0};
-
-// full formation bounds.  these don't account for empty cells
-// var fullFormationBounds.top;
-// var fullFormationBounds.left;
-// var fullFormationBounds.bottom;
-// var fullFormationBounds.right;
 var fullFormationBounds = {top:0, bottom:0, left:0, right:0};
-
 
 var formationOne = [3,3,3,3,3,3,3,3,3,3,3,
                     2,2,2,2,2,2,2,2,2,2,2,
@@ -87,6 +75,7 @@ function unloadFormation(){
     formationOriginY = FORMATION_START_Y;
 
     formationLoaded = false;
+    formationRevealed = false;
 
 } // =========================================================================== end function unloadFormation
 
@@ -184,6 +173,29 @@ function drawPartialFormation(howManyToDraw){
     } // end for i
 
 } // =========================================================================== end function drawPartialFormation
+
+function revealFormation(){
+
+    // Start Reveal counter
+    if (!formationRevealed && !revealFormationCounterRunning){
+        revealFormationCounterRunning = true;
+        revealFormationCounter = 1;
+    }
+
+    drawPartialFormation(revealFormationCounter);
+
+    // Stop counter
+    if (revealFormationCounter >= alienGrid.length && revealFormationCounterRunning){
+        formationRevealed = true;
+        revealFormationCounterRunning = false; // reset to initial value and stops timer
+        revealFormationCounter = 1; // reset to initial value
+    }
+    // Increment counter
+    if (revealFormationCounterRunning){
+        revealFormationCounter++;
+    }
+
+} // =========================================================================== end function revealFormation
 
 function getFormationTop(){
 

@@ -18,8 +18,9 @@ var levelLoaded = false;
 
 var playerActive = true;
 
-var revealFormationCounter;
-
+var revealFormationCounter = 1;
+var revealFormationCounterRunning = false;
+var formationRevealed = false;
 
 var isLevelOverTimerRunning = false;
 var isLevelOverTimerDone = false;
@@ -158,6 +159,9 @@ function unloadLevel(){
     unloadBullets();
     unloadBlasts();
     resetPlayer(); // this does not unload the player
+    if (!playerLoaded){
+        drawingLifeBar = false;
+    }
 
     waveCleared = false;
     levelLoaded = false;
@@ -166,28 +170,49 @@ function unloadLevel(){
 
 function loadLevelSequence(){
 
+    // STEP 1:  Unload level if needed
     if (levelLoaded){
         unloadLevel();
     }
-    loadBunkers(bunkerNew);      // change back to bunkerNew ---------------- NOTE ////////////////
 
-    if (bunkersLoaded){
-        loadFormation(formationOne); // change back to formationOne ------------- NOTE ////////////////
+    // STEP 2:  Draw world (active during entire load process)
+    drawWorld();
+
+    // STEP 3:  BUNKERS:  Load then draw
+    if (!bunkersLoaded){
+        loadBunkers(bunkerNew);      // change back to bunkerNew -------------- NOTE ////////////////
     }
-    if (formationLoaded){
+    if (bunkersLoaded){
+        drawBunkers();
+    }
+
+    // STEP 4:  FORMATION:  Load then reveal then draw
+    if (bunkersLoaded && !formationLoaded){
+        loadFormation(formationOne); // change back to formationOne ----------- NOTE ////////////////
+    }
+    if (formationLoaded && !formationRevealed){
+        revealFormation(); // function not created yet ------------------------ ////////////////
+    }
+    if (formationRevealed){
+        drawFormation();
+    }
+
+    // STEP 5:  PLAYER:  Load (does not draw player)
+    if (formationRevealed){
+        drawingLifeBar = true;
         loadPlayerTimer();
     }
-    if (playerLoaded){
 
-        playerActive = true; // move this elsewhere ------------------------------- ////////////////
-        playScreenActive = true;
-        drawingLifeBar = true;
+    // STEP 6:  PLAY:  Leave loading screen and activate play screen
+    if (playerLoaded && !levelLoaded){
+
+        playerActive = true;
         waveCleared = false;
         levelLoaded = true;
 
         loadingScreenActive = false;
+        playScreenActive = true;
 
     }
-
 
 } // =========================================================================== end function loadLevelSequence
