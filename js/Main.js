@@ -49,36 +49,21 @@ function updateAll() {
         managePlayScreen();
     }
 
-    if (waveCleared){
-        loadingScreenActive = true;
-        waveCleared = false;
-    }
+    if (levelEndScreenActive){
+        if (gameOver && keyHeld_Fire){
+            resetGame();
+        }
 
-    if (gameOver && keyHeld_Fire){
-        resetGame();
+
+
+
+
+
+
+
+
     }
 
     drawGUI();
 
 } // =========================================================================== end function updateAll
-
-function resetGame(){
-    welcomeScreenActive = true;
-    loadingScreenActive = false;
-    playScreenActive = false;
-    gameOver = false;
-
-    welcomeScreenCounter = 0;
-    welcomeScreenDone = false;
-
-    drawingLifeBar = false;
-
-    unloadLevel();
-
-    if (gameScore > hiScore){
-        hiScore = gameScore;
-    }
-
-    gameScore = 0;
-    livesOnDeck = 3;
-} // =========================================================================== end function resetGame

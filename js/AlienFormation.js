@@ -62,6 +62,9 @@ const FORMATION_HIT_PAUSE = 15;
 
 var isMovingRight = true;
 
+var revealFormationCounter = 1;
+var revealFormationCounterRunning = false;
+
 // ============================================================================= end vars
 
 function unloadFormation(){
@@ -74,8 +77,11 @@ function unloadFormation(){
     formationOriginX = FORMATION_START_X;
     formationOriginY = FORMATION_START_Y;
 
-    formationLoaded = false;
+    revealFormationCounter = 1;
+    revealFormationCounterRunning = false;
     formationRevealed = false;
+
+    formationLoaded = false;
 
 } // =========================================================================== end function unloadFormation
 
@@ -107,9 +113,10 @@ function moveFormation(){
         formationHoldShield = false;
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
-        // detect ground impact                                                 NOTE changes game state
+        // detect ground impact                                                 NOTE end level condition
         if (formationBounds.bottom >= canvas.height - GROUND_LEVEL && alienCounter > 0){
-            levelOverCondition = true;
+            invadersLanded = true;
+            gamePaused = true;
             if (playerLoaded){
                 destroyPlayer();
             }

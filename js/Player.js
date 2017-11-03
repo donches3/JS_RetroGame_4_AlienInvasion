@@ -15,7 +15,10 @@ var playerExplosionCounter;
 var playerExplosionActive = false;
 var playerExplosionBounds;
 
-
+// load player timer
+var isLoadPlayerTimerRunning = false;
+var isLoadPlayerTimerDone = false;
+var loadPlayerCounter = 0;
 
 // ============================================================================= end vars
 
@@ -28,25 +31,15 @@ function resetPlayer(){
 
     playerActive = false;
 
-    playerExplosionCounter;
+    playerExplosionCounter = 30;
     playerExplosionActive = false;
     playerExplosionBounds = {top:0, bottom:0, left:0, right:0};
 
     isLoadPlayerTimerRunning = false;
     isLoadPlayerTimerDone = false;
+    loadPlayerCounter = 0;
 
 } // =========================================================================== end function resetPlayer
-
-function managePlayer(){
-
-    if (playerActive){
-        movePlayer();
-        updatePlayerBounds();
-    }
-
-
-
-} // =========================================================================== end function managePlayer
 
 function loadPlayer(){
 
@@ -67,6 +60,50 @@ function updatePlayerBounds(){
     playerBounds.right  = playerX + Math.floor(PLAYER_WIDTH/2);
 
 } // =========================================================================== end function updatePlayerBounds
+
+function loadPlayerTimer(){
+    // Start load player timer
+    if (!playerLoaded && !isLoadPlayerTimerRunning && !isLoadPlayerTimerDone){
+        isLoadPlayerTimerRunning = true;
+        loadPlayerCounter = 90;
+    }
+    // Stop timer
+    if (loadPlayerCounter <= 0 && isLoadPlayerTimerRunning){
+        isLoadPlayerTimerDone = true; // marks timer completion, prevents timer from restarting
+        isLoadPlayerTimerRunning = false; // reset to initial value and stops timer
+        loadPlayerCounter = 90; // reset to initial value
+    }
+    // Increment timer
+    if (isLoadPlayerTimerRunning){
+        loadPlayerCounter--;
+    }
+
+    // only load player after timer has finished
+    if (isLoadPlayerTimerDone){
+
+        if (livesOnDeck > 0){
+            resetPlayer();
+            loadPlayer();
+            playerActive = true;
+            loadingScreenActive = false;
+            gamePaused = false;
+            playScreenActive = true;
+        }
+
+    }
+
+} // =========================================================================== end function loadPlayerTimer
+
+function managePlayer(){
+
+    if (playerActive){
+        movePlayer();
+        updatePlayerBounds();
+    }
+
+
+
+} // =========================================================================== end function managePlayer
 
 function movePlayer(){
 
@@ -91,6 +128,11 @@ function destroyPlayer(){
     playerLoaded = false;
     gamePaused = true;
     startPlayerExplosion();
+
+    // this gives extra time at end of level for player explosions to complete
+    if (endConditionTimerRunning && endConditionTimer < 40){
+        endConditionTimer = 40;
+    }
 
 } // =========================================================================== end function destroyPlayer
 

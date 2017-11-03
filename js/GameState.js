@@ -1,155 +1,64 @@
 
-var gameOver = false;
-var levelOverCondition = false;
-var gamePaused = false;
 
 var livesOnDeck = 3;
 var gameScore = 0;
 var hiScore = 0;
 
+// active screens
 var welcomeScreenActive = true;
 var loadingScreenActive = false;
-var playScreenActive = true;
+var playScreenActive = false;
+var levelEndScreenActive = false
 
+// level parts loaded
 var bunkersLoaded = false;
 var formationLoaded = false;
+var formationRevealed = false;
 var playerLoaded = false;
 var levelLoaded = false;
 
+// play states
 var playerActive = true;
+var gamePaused = false;
 
-var revealFormationCounter = 1;
-var revealFormationCounterRunning = false;
-var formationRevealed = false;
-
-var isLevelOverTimerRunning = false;
-var isLevelOverTimerDone = false;
-var levelOverTimer = 90;
+// level end conditions
 var waveCleared = false;
+var invadersLanded = false;
+var livesGone = false;
 
-var isLoadPlayerTimerRunning = false;
-var isLoadPlayerTimerDone = false;
-var loadPlayerCounter = 0;
+// level end game states
+var levelWin = false;
+var levelLose = false;
+var gameOver = false;
+
+// end condition timer
+var endConditionDetected = false;
+var endConditionTimerRunning = false;
+var endConditionTimerDone = false;
+var endConditionTimer = 90;
 
 // ============================================================================= end vars
 
-function managePlayScreen(){
+function resetGame(){
+    welcomeScreenActive = true;
+    loadingScreenActive = false;
+    playScreenActive = false;
+    loadingScreenActive = false;
 
-    if (!gameOver && !waveCleared){
-        moveAllGameObjects();
+    welcomeScreenCounter = 0;
+    welcomeScreenDone = false;
+
+    drawingLifeBar = false;
+
+    unloadLevel();
+
+    if (gameScore > hiScore){
+        hiScore = gameScore;
     }
 
-    // player destruction and reloading timed sequence
-    if (!playerLoaded && !levelOverCondition){
-        loadPlayerTimer();
-    }
-
-    // detect no aliens left                                                NOTE changes game state
-    if (alienCounter == 0 && sliders.length == 0){
-        levelOverCondition = true;
-    }
-    if (levelOverCondition){
-        // changes game state to Game Over or Wave Cleared after timer finishes
-        levelEndTimer();
-    }
-
-    drawAllGameObjects();
-
-} // =========================================================================== end function managePlayScreen
-
-
-function loadPlayerTimer(){
-    // Start load player timer
-    if (!playerLoaded && !isLoadPlayerTimerRunning){
-        isLoadPlayerTimerRunning = true;
-        loadPlayerCounter = 90;
-    }
-    // Stop timer
-    if (loadPlayerCounter <= 0 && isLoadPlayerTimerRunning){
-        isLoadPlayerTimerDone = true;
-        isLoadPlayerTimerRunning = false; // reset to initial value and stops timer
-        loadPlayerCounter = 90; // reset to initial value
-    }
-    // Increment timer
-    if (isLoadPlayerTimerRunning){
-        loadPlayerCounter--;
-    }
-
-    if (isLoadPlayerTimerDone){ // only loads player after timer has finished
-
-        if (livesOnDeck > 0){
-            loadPlayer();
-            playerActive = true;
-            loadingScreenActive = false;
-            gamePaused = false;
-            playScreenActive = true;
-        } else {
-            gameOver = true;
-        }
-
-    }
-
-} // =========================================================================== end function loadPlayerTimer
-
-function levelEndTimer(){
-
-    // Start Level Over timer
-    if (levelOverCondition && !isLevelOverTimerRunning){
-        isLevelOverTimerRunning = true;
-        levelOverTimer = 90;
-    }
-    // Stop timer
-    if (levelOverTimer <= 0 && isLevelOverTimerRunning){
-        isLevelOverTimerDone = true;
-        isLevelOverTimerRunning = false; // reset to initial value and stops timer
-        levelOverCondition = false; // reset to initial value
-        levelOverTimer = 90; // reset to initial value
-    }
-    // Increment timer
-    if (isLevelOverTimerRunning){
-        levelOverTimer--;
-    }
-
-    if (isLevelOverTimerDone){ // only changes game state after timer has finished
-        if (livesOnDeck <= 0 && !playerLoaded){
-            gameOver = true; //                                                 NOTE changes game state
-        } else {
-            waveCleared = true; //                                              NOTE changes game state
-        }
-    }
-
-} // =========================================================================== end function levelEndTimer
-
-function moveAllGameObjects() {
-
-    if (!gamePaused){
-        moveFormation();
-        managePlayer();
-    }
-    manageSliders();
-    incrementTheseBlasts(bulletBlasts);
-    incrementTheseBlasts(playerBlasts);
-    if (playerExplosionActive){
-        addToPlayerExplosion()
-    }
-    manageBullets(); // bullets should be the last thing moved
-
-} // =========================================================================== end function moveAllGameObjects
-
-function drawAllGameObjects() {
-
-    drawWorld();
-    drawBunkers();
-    drawFormation();
-    drawSliders();
-    if (playerLoaded){
-        drawPlayer();
-    }
-    drawBullets();
-    drawTheseBlasts(bulletBlasts);
-    drawTheseBlasts(playerBlasts);
-
-} // =========================================================================== end function drawAllGameObjects
+    gameScore = 0;
+    livesOnDeck = 3;
+} // =========================================================================== end function resetGame
 
 function unloadLevel(){
 
@@ -159,12 +68,28 @@ function unloadLevel(){
     unloadBullets();
     unloadBlasts();
     resetPlayer(); // this does not unload the player
+
     if (!playerLoaded){
         drawingLifeBar = false;
     }
 
-    waveCleared = false;
     levelLoaded = false;
+
+    // level end conditions
+    waveCleared = false;
+    invadersLanded = false;
+    livesGone = false;
+
+    // level end game states
+    levelWin = false;
+    levelLose = false;
+    gameOver = false;
+
+    // end condition timer
+    endConditionDetected = false;
+    endConditionTimerRunning = false;
+    endConditionTimerDone = false;
+    endConditionTimer = 90;
 
 } // =========================================================================== end function unloadLevel
 
@@ -207,7 +132,7 @@ function loadLevelSequence(){
     if (playerLoaded && !levelLoaded){
 
         playerActive = true;
-        waveCleared = false;
+        gamePaused = false;
         levelLoaded = true;
 
         loadingScreenActive = false;
@@ -216,3 +141,125 @@ function loadLevelSequence(){
     }
 
 } // =========================================================================== end function loadLevelSequence
+
+function managePlayScreen(){
+
+    if (!gameOver && !levelWin && !levelLose){
+        moveAllGameObjects();
+    }
+
+    // player destruction and reloading timed sequence
+    if (!playerLoaded && !endConditionDetected){
+        loadPlayerTimer();
+        //                                                                  NOTE
+        // If an end condition is detected while this timer is running,
+        // the timer will freeze in place.
+        // Timer values will need to be reset when level is reloaded.
+    }
+
+    // detect all end conditions and start a timer before activating proper game state
+    // changes game state to Game Over, Level Win or Level Lose             NOTE changes game state
+    detectEndConditionsTimer();
+
+    if (gameOver || levelWin || levelLose){
+        playScreenActive = false;
+        levelEndScreenActive = true;
+    }
+
+    drawAllGameObjects();
+
+} // =========================================================================== end function managePlayScreen
+
+function moveAllGameObjects() {
+
+    if (!gamePaused){
+        moveFormation();
+        managePlayer();
+    }
+    manageSliders();
+    incrementTheseBlasts(bulletBlasts);
+    incrementTheseBlasts(playerBlasts);
+    if (playerExplosionActive){
+        addToPlayerExplosion()
+    }
+    manageBullets(); // bullets should be the last thing moved
+
+} // =========================================================================== end function moveAllGameObjects
+
+function drawAllGameObjects() {
+
+    drawWorld();
+    drawBunkers();
+    drawFormation();
+    drawSliders();
+    if (playerLoaded){
+        drawPlayer();
+    }
+    drawBullets();
+    drawTheseBlasts(bulletBlasts);
+    drawTheseBlasts(playerBlasts);
+
+} // =========================================================================== end function drawAllGameObjects
+
+function detectEndConditionsTimer(){
+
+    // // -------- Detect End Conditions --------
+    //
+    // detect Wave Cleared condition
+    if (alienCounter == 0){
+        waveCleared = true;
+    }
+    // detect Lives Gone condition
+    if (livesOnDeck <= 0 $$ !playerLoaded){
+        livesGone = true;
+    }
+    // detect Invaders Landed condition
+    // NOTE Invaders Landed condition is detected elsewhere
+
+    if (waveCleared || invadersLanded || livesGone){
+        endConditionDetected = true;
+    }
+
+
+    // // -------- Timer --------
+    //
+    // Start timer (this only happens once)
+    if (endConditionDetected && !endConditionTimerRunning && !endConditionTimerDone){
+        endConditionTimerRunning = true;
+        endConditionTimer = 90;
+    }
+    // Stop timer (this only happens once)
+    if (endConditionTimer <= 0 && endConditionTimerRunning){
+        endConditionTimerDone = true; // marks timer completion, prevents timer from restarting
+        endConditionTimerRunning = false; // reset to initial value and stops timer
+        endConditionTimer = 90; // reset to initial value
+    }
+    // Increment timer
+    if (endConditionTimerRunning){
+        endConditionTimer--;
+
+        // NOTE End Condition Timer is modified
+        // if player is destroyed near end of level
+        // to give explosions time to play out
+    }
+
+
+    // // -------- Assign Proper Game State --------
+    // (this should only happen once)
+    if (endConditionTimerDone){ // only changes game state after timer has finished
+
+        // NOTE multiple End Conditions can be true at the same time.
+        // BUT only one End Level Game STATE can be returned as true.
+        // They must be tested in this order:  Game Over, Level Lose, Level Win
+
+        if (livesGone){
+            gameOver = true;
+        } else if (invadersLanded){
+            levelLose = true;
+        } else { // if Wave Cleared
+            levelWin = true;
+        }
+
+    }
+
+} // =========================================================================== end function detectEndConditionsTimer
