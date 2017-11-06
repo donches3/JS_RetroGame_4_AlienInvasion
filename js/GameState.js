@@ -1,5 +1,6 @@
 
 
+// statistics
 var livesOnDeck = 3;
 var gameScore = 0;
 var hiScore = 0;
@@ -76,7 +77,7 @@ function unloadLevel(){
     unloadSliders();
     unloadBullets();
     unloadBlasts();
-    resetPlayer();
+    unloadPlayer();
 
     levelLoaded = false;
 
@@ -126,7 +127,7 @@ function loadLevelSequence(){
         loadFormation(formationOne); // change back to formationOne ----------- NOTE ////////////////
     }
     if (formationLoaded && !formationRevealed){
-        revealFormation(); // function not created yet ------------------------ ////////////////
+        revealFormation();
     }
     if (formationRevealed){
         drawFormation();
@@ -168,8 +169,8 @@ function managePlayScreen(){
     }
 
     // detect all end conditions and start a timer before activating proper game state
-    // changes game state to Game Over, Level Win or Level Lose             NOTE changes game state
-    detectEndConditionsTimer();
+    // changes game state to Game Over, Level Win or Level Lose
+    detectEndConditionsTimer(); // --------------------------------------------- NOTE changes game state
 
     if (gameOver || levelWin || levelLose){
         playScreenActive = false;
@@ -248,7 +249,7 @@ function detectEndConditionsTimer(){
     if (endConditionTimerRunning){
         endConditionTimer--;
 
-        // NOTE End Condition Timer is modified
+        // NOTE End Condition Timer (counter) is modified
         // if player is destroyed near end of level
         // to give explosions time to play out
     }

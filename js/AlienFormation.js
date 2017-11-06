@@ -113,13 +113,13 @@ function moveFormation(){
         formationHoldShield = false;
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
-        // detect ground impact                                                 NOTE end level condition
+        // detect ground impact
         if (formationBounds.bottom >= canvas.height - GROUND_LEVEL && alienCounter > 0){
-            invadersLanded = true;
-            gamePaused = true;
             if (playerLoaded){
                 destroyPlayer();
             }
+            gamePaused = true;
+            invadersLanded = true; // ----------------------------------------- NOTE end level condition
         }
 
     }
@@ -153,7 +153,7 @@ function drawFormation() {
         // draw current cell
         if (frameToggle && isAnimated){ // draw frame 2
             drawBitmapCentered(alienPics[cellKindHere + frameToggleOffset], drawCellCenterX, drawCellCenterY);
-        } else if (alienPics[cellKindHere] != 0){ // if not empty draw frame A
+        } else if (alienPics[cellKindHere] != 0){ // if not empty draw frame 1
             drawBitmapCentered(alienPics[cellKindHere], drawCellCenterX, drawCellCenterY);
         }
 
@@ -184,7 +184,7 @@ function drawPartialFormation(howManyToDraw){
 function revealFormation(){
 
     // Start Reveal counter
-    if (!formationRevealed && !revealFormationCounterRunning){
+    if (!formationRevealed && !revealFormationCounterRunning && !formationRevealed){
         revealFormationCounterRunning = true;
         revealFormationCounter = 1;
     }
@@ -193,10 +193,11 @@ function revealFormation(){
 
     // Stop counter
     if (revealFormationCounter >= alienGrid.length && revealFormationCounterRunning){
-        formationRevealed = true;
+        formationRevealed = true; // marks counter as done and prevents counter from restarting
         revealFormationCounterRunning = false; // reset to initial value and stops timer
         revealFormationCounter = 1; // reset to initial value
     }
+
     // Increment counter
     if (revealFormationCounterRunning){
         revealFormationCounter++;

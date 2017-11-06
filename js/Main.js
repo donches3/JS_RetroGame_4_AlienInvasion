@@ -48,7 +48,7 @@ function updateAll() {
         managePlayScreen();
     }
 
-    if (levelEndScreenActive){
+    if (levelEndScreenActive){ // ----------------------------- End Level Screen
 
         endScreenTimer();
         drawAllGameObjects();
@@ -69,7 +69,7 @@ function updateAll() {
             playerLoaded = false;
         }
 
-    }
+    } // end -------------- End Level Screen
 
     drawGUI();
 

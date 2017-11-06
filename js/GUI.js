@@ -1,7 +1,4 @@
 
-// const KEYS_OFFSET_X = 1;
-// const KEYS_OFFSET_Y = 0;
-
 const LIFE_BAR_ORIGIN_X = 50;
 const LIFE_BAR_ORIGIN_Y = 700;
 const LIFE_BAR_ICON_OFFSET_X = 180;
@@ -26,10 +23,10 @@ const SCORE_LINE_X = 405;
 const SCORE_ICON_OFFSET_X = -45;
 const SCORE_ICON_OFFSET_Y = -6;
 
-const CHAR_WIDTH = 900/71.25; // experimentally measured value
+const CHAR_WIDTH = 900/71.25; // experimentally measured value ---------------- NOTE
 
 var drawingLifeBar = true;
-var lifeBarLabel = 'Lives Left: ';
+var lifeBarLabel = ''; // I may remove this
 var lifeBarValue;
 
 var welcomeScreenCounter = 0;
@@ -52,7 +49,7 @@ var testValue4 = 909;
 var testLabel5 = 'LABEL 5  ';
 var testValue5 = 909;
 
-
+// ============================================================================= end vars
 
 function drawGUI() {
 
@@ -79,39 +76,38 @@ function drawGUI() {
         drawWelcomeScreen();
     }
 
-    if (levelEndScreenActive){
+    if (levelEndScreenActive){ // ---------------------------- End Level Message
         drawEndLevelScreenMessage();
     }
 
-
-
 } // =========================================================================== end function drawGUI
-
 
 function drawScoreBoard(){
 
     // draw score
     colorTextCentered('SCORE',    SCORE_X_LEFT, SCORE_LINE_Y_1, CHAR_WIDTH, 'white')
     colorTextCentered('<      >', SCORE_X_LEFT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
-    colorTextCentered(gameScore.toString(),  SCORE_X_LEFT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+    colorTextCentered(gameScore.toString(), SCORE_X_LEFT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
 
     // draw hi score
     colorTextCentered('HI SCORE', SCORE_X_RIGHT, SCORE_LINE_Y_1, CHAR_WIDTH, 'white')
     colorTextCentered('<      >', SCORE_X_RIGHT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
-    colorTextCentered(hiScore.toString(),    SCORE_X_RIGHT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
+    colorTextCentered(hiScore.toString(), SCORE_X_RIGHT, SCORE_LINE_Y_2, CHAR_WIDTH, 'white')
 
-
-}
+} // =========================================================================== end function drawScoreBoard
 
 function drawLifeBar(){
+
     lifeBarValue = livesOnDeck;
     colorText(lifeBarLabel + lifeBarValue, LIFE_BAR_ORIGIN_X, LIFE_BAR_ORIGIN_Y,  'white');
 
+    // Life Bar Icons
     for (var i = 0; i < lifeBarValue; i++){
         var drawX = LIFE_BAR_ORIGIN_X + LIFE_BAR_ICON_OFFSET_X + (i * LIFE_BAR_ICON_PITCH);
         var drawY = LIFE_BAR_ORIGIN_Y + LIFE_BAR_ICON_OFFSET_Y;
         drawBitmap(playerPic, drawX, drawY);
     }
+
 } // =========================================================================== end function drawLifeBar
 
 function drawWelcomeScreen(){

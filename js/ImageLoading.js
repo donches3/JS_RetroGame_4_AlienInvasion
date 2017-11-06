@@ -1,4 +1,5 @@
-var warrior1Pic  = document.createElement("img");
+
+// var warrior1Pic  = document.createElement("img");
 var playerPic  = document.createElement("img");
 var bunkerPic  = document.createElement("img");
 
@@ -45,7 +46,7 @@ function loadImageForAlienCode(alienCode, fileName) {
 
 function loadImages() {
     var imageList = [
-        {varName: warrior1Pic,  theFile: "player1warrior.png"}, // not needed for this game ////////////////
+        // {varName: warrior1Pic,  theFile: "player1warrior.png"}, // not needed for this game ////////////////
         {varName: playerPic,    theFile: "PlayerTank_52x24.jpg"},
         {varName: bunkerPic,    theFile: "Bunker_88x42.jpg"},
         // {worldType: WORLD_FLOOR,    theFile: "world_floor.png"}, // not needed for this game ////////////////

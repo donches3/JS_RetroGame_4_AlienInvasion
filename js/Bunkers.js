@@ -31,7 +31,7 @@ const BUNKER_LAYOUT_WIDTH = 640;
 const BUNKER_GAP_WIDTH = Math.floor((BUNKER_LAYOUT_WIDTH - (BUNKER_WIDTH * BUNKER_QUANTITY)) / (BUNKER_QUANTITY - 1));
 // for some reason, canvas.width is undifined here
 // const BUNKERS_ORIGIN_X = Math.floor((canvas.width - BUNKER_LAYOUT_WIDTH)/2);
-var canvasWidth = 900; // ------------------------------------------------------////////////////
+var canvasWidth = 900; // Must code this manually when changing screen size --------------------- NOTE ////////////////
 const BUNKERS_ORIGIN_X = Math.floor((canvasWidth - BUNKER_LAYOUT_WIDTH)/2);
 const BUNKERS_ORIGIN_Y = 500;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
@@ -199,19 +199,12 @@ function collideFormationWithBunkers(){
                                     // destroy block
                                     bunkersAll[bunkerID][blockID] = BUNKER_DAMAGE;
                                 } // end if overlap block
-
                             } // end for blockID
-
                         } // end if overlap
-
                     } // end for bunkerID
-
                 } // end if else
-
             } // end if occupied
-
         } // end for i (alienGrid index)
-
     } // end if formation
 
 } // =========================================================================== end function collideFormationWithBunkers

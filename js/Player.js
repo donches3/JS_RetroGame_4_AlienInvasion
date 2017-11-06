@@ -1,6 +1,6 @@
 
 const PLAYER_Y = 640;
-const PLAYER_START_X = 450;
+const PLAYER_START_X = 75;
 const PLAYER_HEIGHT = 24; // probably not gonna use this
 const PLAYER_WIDTH  = 52;
 const PLAYER_TOP    = PLAYER_Y - 12;
@@ -22,7 +22,7 @@ var loadPlayerCounter = 0;
 
 // ============================================================================= end vars
 
-function resetPlayer(){
+function unloadPlayer(){
 
     playerLoaded = false;
 
@@ -39,7 +39,7 @@ function resetPlayer(){
     isLoadPlayerTimerDone = false;
     loadPlayerCounter = 0;
 
-} // =========================================================================== end function resetPlayer
+} // =========================================================================== end function unloadPlayer
 
 function loadPlayer(){
 
@@ -63,6 +63,7 @@ function updatePlayerBounds(){
 } // =========================================================================== end function updatePlayerBounds
 
 function loadPlayerTimer(){
+
     // Start load player timer
     if (!isLoadPlayerTimerRunning && !isLoadPlayerTimerDone){
         isLoadPlayerTimerRunning = true;
@@ -81,16 +82,14 @@ function loadPlayerTimer(){
 
     // only load player after timer has finished
     if (isLoadPlayerTimerDone){
-
-        if (livesOnDeck > 0){
-            resetPlayer();
+        if (livesOnDeck > 0){ // I don't think this test is necessary here
+            unloadPlayer();
             loadPlayer();
             playerActive = true;
             gamePaused = false;
             loadingScreenActive = false;
             playScreenActive = true;
         }
-
     }
 
 } // =========================================================================== end function loadPlayerTimer
@@ -101,8 +100,6 @@ function managePlayer(){
         movePlayer();
         updatePlayerBounds();
     }
-
-
 
 } // =========================================================================== end function managePlayer
 
