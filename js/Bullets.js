@@ -1,7 +1,7 @@
 const BULLET_WIDTH = 4;
 const BULLET_HEIGHT = 15;
 
-const MAX_PLAYER_BULLETS = 10; // ------------- change back to one ------------ ////////////////
+const MAX_PLAYER_BULLETS = 30; // ------------- change back to one ------------ NOTE ////////////////
 const MAX_FORMATION_BULLETS = 2;
 const MAX_SLIDER_BULLETS = 4; // I may not use this in the final fire control code
 
@@ -19,7 +19,7 @@ const SLIDER_FIRE_COOL_DOWN = 30;
 // ============================================================================= end vars
 
 function unloadBullets(){
-    
+
     playerBullets = [];
     formationBullets = [];
     sliderBullets = [];

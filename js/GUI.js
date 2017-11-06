@@ -56,15 +56,12 @@ var testValue5 = 909;
 
 function drawGUI() {
 
-    testLabel1 = 'Score  ';
-    testValue1 = gameScore;
+    // testLabel1 = 'Score  ';
+    // testValue1 = gameScore;
+    // //
+    // testLabel2 = 'Hi Score   ';
+    // testValue2 = hiScore;
     //
-    testLabel2 = 'Hi Score   ';
-    testValue2 = hiScore;
-    //
-
-
-
 
     // colorText(testLabel1 + testValue1, 100, 50,  'white');
     // colorText(testLabel2 + testValue2, 100, 75,  'white');
@@ -74,25 +71,22 @@ function drawGUI() {
 
     drawScoreBoard();
 
-    if (gameOver){
-        // colorText('GAME OVER', 400, 150, 'white');
-        colorTextCentered('GAME OVER', CENTER_SCREEN_X, 175, CHAR_WIDTH, 'white')
-        // colorText('Press Spacebar to Start', 400, 200, 'white');
-        colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, 225, CHAR_WIDTH, 'white')
-    }
-
     if (drawingLifeBar){
         drawLifeBar();
+    }
+
+    if (welcomeScreenActive){ // -------------------------------- Welcome Screen
+        drawWelcomeScreen();
+    }
+
+    if (levelEndScreenActive){
+        drawEndLevelScreenMessage();
     }
 
 
 
 } // =========================================================================== end function drawGUI
 
-// const SCORE_X_LEFT  = CENTER_SCREEN_X - 200;
-// const SCORE_X_RIGHT = CENTER_SCREEN_X + 200;
-// const SCORE_LINE_Y_1 = 50;
-// const SCORE_LINE_Y_2 = 75;
 
 function drawScoreBoard(){
 
@@ -162,3 +156,28 @@ function drawWelcomeScreen(){
     }
 
 } // =========================================================================== end function drawWelcomeScreen
+
+function drawEndLevelScreenMessage(){
+
+        if (gameOver){
+            colorTextCentered('GAME OVER', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            if (endScreenCounter < 45 || endScreenTimerDone) {
+                colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+            }
+        }
+
+        if (levelLose){
+            colorTextCentered('INVASION FORCE HAS LANDED', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            if (endScreenCounter < 45) {
+                colorTextCentered('NEXT WAVE APPROACHING', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+            }
+        }
+
+        if (levelWin){
+            colorTextCentered('WAVE CLEARED', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            if (endScreenCounter < 45) {
+                colorTextCentered('NEXT WAVE APPROACHING', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+            }
+        }
+
+} // =========================================================================== end function drawEndLevelScreenMessage

@@ -24,7 +24,7 @@ var loadPlayerCounter = 0;
 
 function resetPlayer(){
 
-    // this does not unload the player
+    playerLoaded = false;
 
     playerX = 0;
     playerBounds = {top:0, bottom:0, left:0, right:0};
@@ -45,9 +45,10 @@ function loadPlayer(){
 
     playerX = PLAYER_START_X;
     updatePlayerBounds();
-    if (!playerLoaded){
+    if (!playerCarryOver){
         livesOnDeck -= 1;
     }
+    playerCarryOver = false;
     playerLoaded = true;
 
 } // =========================================================================== end function loadPlayer
@@ -63,7 +64,7 @@ function updatePlayerBounds(){
 
 function loadPlayerTimer(){
     // Start load player timer
-    if (!playerLoaded && !isLoadPlayerTimerRunning && !isLoadPlayerTimerDone){
+    if (!isLoadPlayerTimerRunning && !isLoadPlayerTimerDone){
         isLoadPlayerTimerRunning = true;
         loadPlayerCounter = 90;
     }
@@ -85,8 +86,8 @@ function loadPlayerTimer(){
             resetPlayer();
             loadPlayer();
             playerActive = true;
-            loadingScreenActive = false;
             gamePaused = false;
+            loadingScreenActive = false;
             playScreenActive = true;
         }
 

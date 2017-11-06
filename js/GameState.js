@@ -8,7 +8,7 @@ var hiScore = 0;
 var welcomeScreenActive = true;
 var loadingScreenActive = false;
 var playScreenActive = false;
-var levelEndScreenActive = false
+var levelEndScreenActive = false;
 
 // level parts loaded
 var bunkersLoaded = false;
@@ -16,6 +16,8 @@ var formationLoaded = false;
 var formationRevealed = false;
 var playerLoaded = false;
 var levelLoaded = false;
+
+var playerCarryOver = false;
 
 // play states
 var playerActive = true;
@@ -37,18 +39,25 @@ var endConditionTimerRunning = false;
 var endConditionTimerDone = false;
 var endConditionTimer = 90;
 
+// end screen timer
+var endScreenTimerRunning = false;
+var endScreenTimerDone = false;
+var endScreenCounter = 90;
+
 // ============================================================================= end vars
 
 function resetGame(){
     welcomeScreenActive = true;
     loadingScreenActive = false;
     playScreenActive = false;
-    loadingScreenActive = false;
+    levelEndScreenActive = false;
 
     welcomeScreenCounter = 0;
     welcomeScreenDone = false;
 
     drawingLifeBar = false;
+
+    playerCarryOver = false;
 
     unloadLevel();
 
@@ -67,11 +76,7 @@ function unloadLevel(){
     unloadSliders();
     unloadBullets();
     unloadBlasts();
-    resetPlayer(); // this does not unload the player
-
-    if (!playerLoaded){
-        drawingLifeBar = false;
-    }
+    resetPlayer();
 
     levelLoaded = false;
 
@@ -91,11 +96,16 @@ function unloadLevel(){
     endConditionTimerDone = false;
     endConditionTimer = 90;
 
+    // end screen timer
+    endScreenTimerRunning = false;
+    endScreenTimerDone = false;
+    endScreenCounter = 90;
+
 } // =========================================================================== end function unloadLevel
 
 function loadLevelSequence(){
 
-    // STEP 1:  Unload level if needed
+    // STEP 1:  Unload level if needed, this only happens once
     if (levelLoaded){
         unloadLevel();
     }
@@ -210,7 +220,7 @@ function detectEndConditionsTimer(){
         waveCleared = true;
     }
     // detect Lives Gone condition
-    if (livesOnDeck <= 0 $$ !playerLoaded){
+    if (livesOnDeck <= 0 && !playerLoaded){
         livesGone = true;
     }
     // detect Invaders Landed condition
@@ -263,3 +273,23 @@ function detectEndConditionsTimer(){
     }
 
 } // =========================================================================== end function detectEndConditionsTimer
+
+function endScreenTimer(){
+
+    // Start timer (this only happens once)
+    if (!endScreenTimerRunning && !endScreenTimerDone){
+        endScreenTimerRunning = true;
+        endScreenCounter = 90;
+    }
+    // Stop timer (this only happens once)
+    if (endScreenCounter <= 0 && endScreenTimerRunning){
+        endScreenTimerDone = true; // marks timer completion, prevents timer from restarting
+        endScreenTimerRunning = false; // reset to initial value and stops timer
+        endScreenCounter = 90; // reset to initial value
+    }
+    // Increment timer
+    if (endScreenTimerRunning){
+        endScreenCounter--;
+    }
+
+} // =========================================================================== end function endScreenTimer

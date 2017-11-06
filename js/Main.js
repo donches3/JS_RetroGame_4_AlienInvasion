@@ -25,7 +25,6 @@ function imageLoadingDoneSoStartGame() {
 
     hiScore = 0;
     resetGame();
-    // loadLevelSequence();
 
 } // =========================================================================== end function imageLoadingDoneSoStartGame
 
@@ -34,7 +33,7 @@ function updateAll() {
     colorRect(0,0, canvas.width, canvas.height, 'black');
 
     if (welcomeScreenActive){ // -------------------------------- Welcome Screen
-        drawWelcomeScreen();
+        // function Draw Welcome Screen is in Draw GUI
         if (welcomeScreenDone && keyHeld_Fire){
             welcomeScreenActive = false;
             loadingScreenActive = true;
@@ -50,17 +49,25 @@ function updateAll() {
     }
 
     if (levelEndScreenActive){
-        if (gameOver && keyHeld_Fire){
+
+        endScreenTimer();
+        drawAllGameObjects();
+
+        if (gameOver && (endScreenCounter < 35 || endScreenTimerDone) && keyHeld_Fire){
             resetGame();
         }
 
+        if (levelLose && endScreenTimerDone){
+            levelEndScreenActive = false;
+            loadingScreenActive = true;
+        }
 
-
-
-
-
-
-
+        if (levelWin && endScreenTimerDone){
+            levelEndScreenActive = false;
+            loadingScreenActive = true;
+            playerCarryOver = true;
+            playerLoaded = false;
+        }
 
     }
 
