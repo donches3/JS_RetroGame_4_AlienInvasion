@@ -82,7 +82,7 @@ function loadPlayerTimer(){
 
     // only load player after timer has finished
     if (isLoadPlayerTimerDone){
-        if (livesOnDeck > 0){ // I don't think this test is necessary here
+        if (livesOnDeck > 0 || playerCarryOver){ // I don't think this test is necessary here
             unloadPlayer();
             loadPlayer();
             playerActive = true;
