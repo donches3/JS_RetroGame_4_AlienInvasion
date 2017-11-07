@@ -8,6 +8,7 @@ const FORMATION_START_Y = 163;
 const FORMATION_INCREMENT_X = 8;
 const FORMATION_INCREMENT_Y = 24;
 const FORMATION_EDGE_LIMIT = 40;
+const FORMATION_LANDING_GOAL = 620; // --------------------------------------------- ////////////////
 
 var formationOriginX = FORMATION_START_X;
 var formationOriginY = FORMATION_START_Y;
@@ -113,8 +114,8 @@ function moveFormation(){
         formationHoldShield = false;
         frameToggle = !frameToggle; // switch frame for two-frame aliens
 
-        // detect ground impact
-        if (formationBounds.bottom >= canvas.height - GROUND_LEVEL && alienCounter > 0){
+        // detect landing
+        if (formationBounds.bottom >= FORMATION_LANDING_GOAL && alienCounter > 0){
             if (playerLoaded){
                 destroyPlayer();
             }
