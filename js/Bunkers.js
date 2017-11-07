@@ -27,11 +27,11 @@ var bunkersAll = [];
 var bunkersAllBounds = [];
 
 const BUNKER_QUANTITY = 4;
-const BUNKER_LAYOUT_WIDTH = 640;
+const BUNKER_LAYOUT_WIDTH = 660;
 const BUNKER_GAP_WIDTH = Math.floor((BUNKER_LAYOUT_WIDTH - (BUNKER_WIDTH * BUNKER_QUANTITY)) / (BUNKER_QUANTITY - 1));
 // for some reason, canvas.width is undifined here
 // const BUNKERS_ORIGIN_X = Math.floor((canvas.width - BUNKER_LAYOUT_WIDTH)/2);
-var canvasWidth = 900; // Must code this manually when changing screen size --------------------- NOTE ////////////////
+var canvasWidth = 960; // Must code this manually when changing screen size --------------------- NOTE ////////////////
 const BUNKERS_ORIGIN_X = Math.floor((canvasWidth - BUNKER_LAYOUT_WIDTH)/2);
 const BUNKERS_ORIGIN_Y = 546;
 const BUNKERS_TOP = BUNKERS_ORIGIN_Y;
