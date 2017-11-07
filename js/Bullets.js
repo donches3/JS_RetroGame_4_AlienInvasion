@@ -6,13 +6,13 @@ const MAX_FORMATION_BULLETS = 2;
 const MAX_SLIDER_BULLETS = 4; // I may not use this in the final fire control code
 
 const PLAYER_BULLET_VELOCITY = -20; // pixels per frame, also, negative value goes up
-const ENEMY_BULLET_VELOCITY = 10; // for both slider and formation bullets
+const ENEMY_BULLET_VELOCITY = 8; // for both slider and formation bullets
 
 var playerBullets = [];
 var formationBullets = [];
 var sliderBullets = [];
 
-const FORMATION_FIRE_COOL_DOWN = 8;
+const FORMATION_FIRE_COOL_DOWN = 20;
 var formationFireCoolDownCounter = FORMATION_FIRE_COOL_DOWN;
 const SLIDER_FIRE_COOL_DOWN = 30;
 

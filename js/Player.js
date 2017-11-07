@@ -1,11 +1,11 @@
 
-const PLAYER_Y = 640;
-const PLAYER_START_X = 75;
+const PLAYER_Y = 620;
+const PLAYER_START_X = 125;
 const PLAYER_HEIGHT = 24; // probably not gonna use this
 const PLAYER_WIDTH  = 52;
 const PLAYER_TOP    = PLAYER_Y - 12;
 const PLAYER_BOTTOM = PLAYER_Y + 12;
-const PLAYER_SPEED = 5;
+const PLAYER_SPEED = 8;
 const PLAYER_EDGE_LIMIT = 40;
 
 var playerX = 0;

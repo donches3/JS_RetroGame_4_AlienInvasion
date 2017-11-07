@@ -1,8 +1,8 @@
 
 
-const GROUND_LEVEL = 52;
+const GROUND_LEVEL = 53;
 const GROUND_THICKNESS = 3;
-const TOP_OF_WORLD = 114; // for bullet impacts
+const TOP_OF_WORLD = 108; // for bullet impacts
 
 // ============================================================================= end vars
 

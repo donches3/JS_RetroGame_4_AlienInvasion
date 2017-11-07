@@ -1,13 +1,13 @@
 
 const SLIDERS_MAXIMUM = 3;
-const SLIDERS_Y = 135;
+const SLIDERS_Y = 124;
 const SLIDERS_HEIGHT = 24; // probably not gonna use this
 const SLIDERS_TOP = SLIDERS_Y - 12;
 const SLIDERS_BOTTOM = SLIDERS_Y + 12;
-const SLIDER_SPEED_SLOW = 10;
-const SLIDER_SPEED_MEDIUM = 15;
-const SLIDER_SPEED_FAST = 20;
-const SLIDER_SPAWN_COOL_DOWN = 300; // ------------this may need tweaking ----- NOTE ////////////////
+const SLIDER_SPEED_SLOW = 8;
+const SLIDER_SPEED_MEDIUM = 12;
+const SLIDER_SPEED_FAST = 16;
+const SLIDER_SPAWN_COOL_DOWN = 750;
 var sliderSpawnCoolDownCounter = SLIDER_SPAWN_COOL_DOWN;
 var sliderSpawnsOnRight = true;
 var sliders = [];
