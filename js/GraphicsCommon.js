@@ -34,7 +34,7 @@ function colorCircle(centerX, centerY, radius, fillColor) {
 } // =========================================================================== end function colorCircle
 
 function colorText(showWords, textX, textY, fillColor) {
-    canvasContext.font="bold 21px courier";
+    canvasContext.font="bold 32px courier";
     // canvasContext.font="bold 21px arial";
     canvasContext.fillStyle = fillColor;
     canvasContext.fillText(showWords, textX, textY);
@@ -44,11 +44,29 @@ function colorTextCentered(showWords, centerX, atY, charWidth, fillColor){
     var numChars = showWords.length
     var atX = centerX - Math.floor((numChars * charWidth)/2);
 
-    canvasContext.font="bold 21px courier";
+    canvasContext.font="bold 32px courier";
     // canvasContext.font="bold 21px arial";
     canvasContext.fillStyle = fillColor;
     canvasContext.fillText(showWords, atX, atY);
-}
+} // =========================================================================== end function colorTextCentered
+
+function colorTextCenteredRect(showWords, centerX, atY, charWidth, fillColor){
+    var numChars = showWords.length
+    var atX = centerX - Math.floor((numChars * charWidth)/2);
+    var boxWidth = (numChars * charWidth);
+    var charHeight = 20;
+    var boxCenterY = atY - Math.floor(charHeight/2);
+    var padding = 24;
+
+    //               (centerX, centerY,    boxWidth,           boxHeight,            fillColor)
+    colorRectCentered(centerX, boxCenterY, boxWidth + padding, charHeight + padding, 'black');
+
+    canvasContext.font="bold 32px courier";
+    // canvasContext.font="bold 21px arial";
+    canvasContext.fillStyle = fillColor;
+    canvasContext.fillText(showWords, atX, atY);
+} // =========================================================================== end function colorTextCenteredRect
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

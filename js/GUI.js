@@ -5,11 +5,11 @@ const LIFE_BAR_ICON_OFFSET_X = 75;
 const LIFE_BAR_ICON_OFFSET_Y = -20;
 const LIFE_BAR_ICON_PITCH = 64;
 
-const CENTER_SCREEN_X = 450;
+const CENTER_SCREEN_X = 480;
 const SCORE_X_LEFT  = CENTER_SCREEN_X - 250;
 const SCORE_X_RIGHT = CENTER_SCREEN_X + 250;
 const SCORE_LINE_Y_1 = 50;
-const SCORE_LINE_Y_2 = 75;
+const SCORE_LINE_Y_2 = 100;
 
 const WELCOME_Y_1 = 150;
 const WELCOME_Y_2 = 200;
@@ -19,11 +19,14 @@ const WELCOME_Y_5 = 400;
 const WELCOME_Y_6 = 450;
 const WELCOME_Y_7 = 500;
 const WELCOME_Y_8 = 600;
-const SCORE_LINE_X = 405;
-const SCORE_ICON_OFFSET_X = -45;
-const SCORE_ICON_OFFSET_Y = -6;
+const SCORE_LINE_X = CENTER_SCREEN_X - 80;
+const SCORE_ICON_OFFSET_X = -60;
+const SCORE_ICON_OFFSET_Y = -10;
 
-const CHAR_WIDTH = 900/71.25; // experimentally measured value ---------------- NOTE
+const END_MESSAGE_Y_1 = 175;
+const END_MESSAGE_Y_2 = 275;
+
+const CHAR_WIDTH = 960/50; // experimentally measured value ------------------- NOTE
 
 var drawingLifeBar = true;
 var lifeBarLabel = ''; // I may remove this
@@ -49,6 +52,8 @@ var testValue4 = 909;
 var testLabel5 = 'LABEL 5  ';
 var testValue5 = 909;
 
+// var textRuler = '123456789012345678901234567890123456789012345678901234567890';
+
 // ============================================================================= end vars
 
 function drawGUI() {
@@ -65,6 +70,9 @@ function drawGUI() {
     // colorText(testLabel3 + testValue3, 100, 100, 'white');
     // colorText(testLabel4 + testValue4, 100, 125, 'white');
     // colorText(testLabel5 + testValue5, 100, 150, 'white');
+
+    // colorRect(0, 100 - 24, canvas.width, 24, 'red');
+    // colorText(textRuler, 0, 100, 'white');
 
     drawScoreBoard();
 
@@ -156,23 +164,23 @@ function drawWelcomeScreen(){
 function drawEndLevelScreenMessage(){
 
         if (gameOver){
-            colorTextCentered('GAME OVER', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            colorTextCenteredRect('GAME OVER', CENTER_SCREEN_X, END_MESSAGE_Y_1, CHAR_WIDTH, 'white');
             if (endScreenCounter < 45 || endScreenTimerDone) {
-                colorTextCentered('PRESS SPACEBAR TO START', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+                colorTextCenteredRect('PRESS SPACEBAR TO START', CENTER_SCREEN_X, END_MESSAGE_Y_2, CHAR_WIDTH, 'white');
             }
         }
 
         if (levelLose){
-            colorTextCentered('INVASION FORCE HAS LANDED', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            colorTextCenteredRect('INVASION FORCE HAS LANDED', CENTER_SCREEN_X, END_MESSAGE_Y_1, CHAR_WIDTH, 'white');
             if (endScreenCounter < 45) {
-                colorTextCentered('NEXT WAVE APPROACHING', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+                colorTextCenteredRect('NEXT WAVE APPROACHING', CENTER_SCREEN_X, END_MESSAGE_Y_2, CHAR_WIDTH, 'white');
             }
         }
 
         if (levelWin){
-            colorTextCentered('WAVE CLEARED', CENTER_SCREEN_X, 150, CHAR_WIDTH, 'white');
+            colorTextCenteredRect('WAVE CLEARED', CENTER_SCREEN_X, END_MESSAGE_Y_1, CHAR_WIDTH, 'white');
             if (endScreenCounter < 45) {
-                colorTextCentered('NEXT WAVE APPROACHING', CENTER_SCREEN_X, 200, CHAR_WIDTH, 'white');
+                colorTextCenteredRect('NEXT WAVE APPROACHING', CENTER_SCREEN_X, END_MESSAGE_Y_2, CHAR_WIDTH, 'white');
             }
         }
 
